@@ -1182,11 +1182,12 @@ h1{font-size:26px;font-weight:900;margin:8px 0 4px}
 
   // 招きの印をもらうレベル（全77枚。後半ほど間隔が開く）
   var MILE = (function(){
-    var m = [], prev = 0;
-    for (var i = 0; i < 77; i++){
-      var lv = Math.round(1 + 599 * Math.pow(i / 76, 2));
-      if (lv <= prev) lv = prev + 1;
-      m.push(lv); prev = lv;
+    var m = [1], prev = 1, lv = 1, g0 = 3, k = (799 - 76 * g0) / (76 * 77 / 2);
+    for (var i = 1; i <= 76; i++){
+      lv += g0 + k * i;
+      var v = Math.round(lv);
+      if (v <= prev) v = prev + 1;
+      m.push(v); prev = v;
     }
     return m;
   })();
