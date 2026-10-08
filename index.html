@@ -1593,7 +1593,7 @@ h1{font-size:26px;font-weight:900;margin:8px 0 4px}
     var gsub = g ? g.name + '(' + (+g.test.split('-')[1]) + '/' + (+g.test.split('-')[2]) + ')・第' + g.from + '〜' + g.to + '回' : '次のグノレブの範囲はまだ入っていません';
     if (!g && mode === 'gnorev') mode = 'all';
     chipRow('modes', [
-      {key:'all', title:'これまで全部'},
+      {key:'all', title:'全部'},
       {key:'review', title:'次回復習テスト対策', dis:!latestUnit()},
       {key:'gnorev', title:'次回グノレブ対策', dis:!g}
     ].map(function(d){ d.n = poolFor(d.key, kind).length; return d; }), mode, function(k){ mode = k; });
