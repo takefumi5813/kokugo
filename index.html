@@ -323,7 +323,6 @@ h1{font-size:26px;font-weight:900;margin:8px 0 4px}
 
 .tip{background:var(--ctx);border-left:4px solid var(--primary);border-radius:8px;padding:10px 14px;margin:0 0 14px;font-size:15px;font-weight:700;line-height:1.6}
 .tip b{color:var(--primary);font-size:17px}
-.chip small.cnt{font-weight:700;opacity:.85}
 </style>
 </head>
 <body>
@@ -1581,7 +1580,6 @@ h1{font-size:26px;font-weight:900;margin:8px 0 4px}
       b.setAttribute('aria-pressed', cur === d.key ? 'true' : 'false');
       b.appendChild(document.createTextNode(d.title));
       if (d.sub){ var s = document.createElement('small'); s.textContent = d.sub; b.appendChild(s); }
-      if (d.n !== undefined){ var c = document.createElement('small'); c.className = 'cnt'; c.textContent = d.n + '問'; b.appendChild(c); }
       b.onclick = function(){ onpick(d.key); buildHome(); };
       box.appendChild(b);
     });
@@ -1596,12 +1594,12 @@ h1{font-size:26px;font-weight:900;margin:8px 0 4px}
       {key:'all', title:'全部'},
       {key:'review', title:'次回復習テスト対策', dis:!latestUnit()},
       {key:'gnorev', title:'次回グノレブ対策', dis:!g}
-    ].map(function(d){ d.n = poolFor(d.key, kind).length; return d; }), mode, function(k){ mode = k; });
+    ], mode, function(k){ mode = k; });
     chipRow('kinds', [
       {key:'all', title:'ぜんぶ'}, {key:'kaki', title:'漢字の書き', sub:'画面に書く'},
       {key:'yomi', title:'漢字の読み'}, {key:'chi', title:'知識', sub:'慣用句・四字熟語・文法など'},
       {key:'goi', title:'語彙', sub:'ことばの意味'}
-    ].map(function(d){ d.n = poolFor(mode, d.key).length; return d; }), kind, function(k){ kind = k; });
+    ], kind, function(k){ kind = k; });
     chipRow('counts', [{key:5,title:'5問'},{key:10,title:'10問'},{key:20,title:'20問'},{key:0,title:'ぜんぶ'}], count, function(k){ count = k; });
     var pool = poolFor(mode, kind), due = pool.filter(isDue), nx = nextDueText(mode, kind);
     $('start').disabled = due.length === 0;
