@@ -490,6 +490,19 @@ h1{font-size:26px;font-weight:900;margin:8px 0 4px}
     Object.keys(CFG.open).forEach(function(u){ if (/^\d+$/.test(u) && isOpen(u) && +u > n) n = +u; });
     return n ? String(n) : null;
   }
+  function prevUnit(lu){
+    var n = 0;
+    Object.keys(CFG.open).forEach(function(u){ if (/^\d+$/.test(u) && isOpen(u) && +u < +lu && +u > n) n = +u; });
+    return n ? String(n) : null;
+  }
+  function isKanjiQ(q){ return q.f === '漢字の書き' || q.f === '漢字の読み'; }
+  function reviewUnits(){ var lu = latestUnit(); return lu ? [lu, prevUnit(lu)] : [null, null]; }
+  function inReview(q){
+    var r = reviewUnits(), lu = r[0], pu = r[1];
+    if (!lu) return false;
+    if (q.u.indexOf(lu) >= 0) return true;
+    return isKanjiQ(q) && !!pu && q.u.indexOf(pu) >= 0;
+  }
   function inRange(q, g){
     return q.u.some(function(u){
       if (!/^\d+$/.test(u)) return false;
@@ -1537,15 +1550,15 @@ h1{font-size:26px;font-weight:900;margin:8px 0 4px}
   var mode = 'all', kind = 'all', count = 10;
   var mcq = 1;   // 知識・語彙はつねに4択
   function rangeFilter(m){
-    if (m === 'last'){ var lu = latestUnit(); return function(q){ return !!lu && q.u.indexOf(lu) >= 0; }; }
+    if (m === 'review') return inReview;
     if (m === 'gnorev'){ var g = nextGnorev(); return g ? function(q){ return inRange(q, g); } : function(){ return false; }; }
     return avail;
   }
   function isGoi(q){ return q.f.indexOf('語彙') === 0; }
   function kindFilter(k){
-    if (k === 'kaki') return function(q){ return q.k === 'W'; };
+    if (k === 'kaki') return function(q){ return q.k === 'W' && q.f !== '四字熟語'; };
     if (k === 'yomi') return function(q){ return q.k === 'R'; };
-    if (k === 'chi')  return function(q){ return q.k === 'K' && !isGoi(q); };
+    if (k === 'chi')  return function(q){ return (q.k === 'K' && !isGoi(q)) || (q.k === 'W' && q.f === '四字熟語'); };
     if (k === 'goi')  return function(q){ return q.k === 'K' && isGoi(q); };
     return function(){ return true; };
   }
@@ -1579,7 +1592,7 @@ h1{font-size:26px;font-weight:900;margin:8px 0 4px}
     if (!g && mode === 'gnorev') mode = 'all';
     chipRow('modes', [
       {key:'all', title:'これまで全部', sub:'授業でやった回すべて(春期・夏期もふくむ)'},
-      {key:'last', title:'直近の授業だけ', sub:latestUnit() ? '第' + latestUnit() + '回だけ' : '', dis:!latestUnit()},
+      {key:'review', title:'次回の復習テスト対策', sub:(function(){ var r = reviewUnits(); return r[0] ? '漢字＝第' + (r[1] ? r[1] + '・' : '') + r[0] + '回／知識＝第' + r[0] + '回' : ''; })(), dis:!latestUnit()},
       {key:'gnorev', title:'直近グノレブだけ', sub:gsub, dis:!g}
     ], mode, function(k){ mode = k; });
     chipRow('kinds', [
@@ -1771,8 +1784,8 @@ h1{font-size:26px;font-weight:900;margin:8px 0 4px}
     $('combo').textContent = combo >= 2 ? combo + 'れんぞく中' : '';
     var tg = tagOf(q); $('tag').textContent = tg[1]; $('tag').className = 'tag ' + tg[0];
     var g = mode === 'gnorev' ? nextGnorev() : null;
-    var lu2 = mode === 'last' ? latestUnit() : null;
-    var uo = (lu2 && q.u.indexOf(lu2) >= 0 && lu2) || (g && q.u.filter(function(u){ return /^\d+$/.test(u) && +u >= g.from && +u <= g.to && isOpen(u); })[0]) || q.u.filter(isOpen)[0] || q.u[0];
+    var rv = mode === 'review' ? reviewUnits() : [];
+    var uo = (rv[0] && q.u.indexOf(rv[0]) >= 0 && rv[0]) || (rv[1] && q.u.indexOf(rv[1]) >= 0 && rv[1]) || (g && q.u.filter(function(u){ return /^\d+$/.test(u) && +u >= g.from && +u <= g.to && isOpen(u); })[0]) || q.u.filter(isOpen)[0] || q.u[0];
     $('unit').textContent = unitLabel(uo) + (q.t ? '・道場テスト' : '');
     var L = (S[q.id] && S[q.id].l) || 0, rk = $('rank');
     rk.innerHTML = ''; var lab = document.createElement('small'); lab.textContent = 'ランク'; rk.appendChild(lab);
