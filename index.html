@@ -571,6 +571,25 @@ body[data-screen="home"]>.wrap{background:none;border:0;box-shadow:none;max-widt
 }
 @media(max-width:360px){#home h1{font-size:27px}#home .lead{font-size:10px}#home .hud{flex-wrap:wrap}#home .hud .pt{flex:1;font-size:10px}#home>.panel{padding:22px 12px}.opening-lead{font-size:12px}#opening-title{font-size:62px}}
 
+
+/* ===== デイリークエスト ===== */
+.quest{margin:0 0 22px;padding:16px 20px;background:linear-gradient(135deg,#342a21ed,#211b16f5);border:1px solid #a58a5a;border-radius:3px;box-shadow:inset 0 0 0 4px #211b16,inset 0 0 0 5px #8d744942,0 12px 30px #130d0855;color:#f2e8d2}
+.quest .qhead{display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap}
+.quest .qtitle{font-family:var(--serif);font-size:16px;font-weight:600;color:#f1dfbd;letter-spacing:.08em}
+.quest .qnum{font-family:var(--serif);font-size:15px;color:#e5c58c;font-variant-numeric:tabular-nums;white-space:nowrap}
+.quest .qbar{height:6px;background:#4a3d2e;margin:10px 0 8px;overflow:hidden}
+.quest .qbar i{display:block;height:100%;width:0;background:linear-gradient(90deg,#b8945a,#ead7ab);transition:width .3s}
+.quest .qrew{font-size:12px;color:#c7baa3;line-height:1.8;margin:0}
+.quest.done{border-color:#e1c18a;box-shadow:inset 0 0 0 4px #211b16,inset 0 0 0 5px #e1c18a66,0 12px 30px #130d0855}
+.quest.done .qbar i{background:linear-gradient(90deg,#e1c18a,#fff0c8)}
+.qclear{position:absolute;left:0;right:0;top:18vh;text-align:center;pointer-events:none;animation:skin .4s ease both;padding:0 16px}
+.qclear .qtag{display:inline-block;background:#c3a465;color:#282820;font-size:14px;font-weight:900;padding:4px 16px;border-radius:2px;letter-spacing:.15em}
+.qclear .qbig{font-family:"Yuji Syuku",var(--serif);font-size:min(12vw,64px);color:#ead7ab;line-height:1.25;margin-top:10px;text-shadow:0 0 20px rgba(234,215,171,.45),0 2px 10px #000;animation:spop .5s cubic-bezier(.2,1.6,.4,1) both}
+.qclear .qitems{margin:14px auto 0;max-width:520px;display:grid;gap:6px}
+.qclear .qitems div{font-size:min(4.6vw,19px);font-weight:700;color:#fff;background:rgba(36,27,20,.75);border:1px solid #9c7c4c;padding:8px 12px;border-radius:3px;opacity:0;animation:sq .45s ease both}
+.questline{font-size:15px;font-weight:700;color:var(--gold);margin:0 0 12px}
+@media(max-width:600px){.quest{padding:13px 14px;margin-bottom:18px}.quest .qtitle{font-size:15px}}
+@media(prefers-reduced-motion:reduce){.quest .qbar i{transition:none}.qclear,.qclear .qbig,.qclear .qitems div{animation:fadeonly 900ms forwards}}
 </style>
 </head>
 <body data-screen="opening">
@@ -597,6 +616,7 @@ body[data-screen="home"]>.wrap{background:none;border:0;box-shadow:none;max-widt
       <figure class="cover-art"><div class="cover-motifs" id="covermotifs" aria-hidden="true"></div><figcaption>ことばの書斎</figcaption></figure>
     </header>
     <button class="jobbar" id="jobbtn" type="button"><span class="jicon" id="jicon"></span><span class="jtxt"><b id="jname"></b><small id="jprog"></small></span><span class="jgo">仲間と技 ›</span></button>
+    <div class="quest" id="quest" role="status"><div class="qhead"><span class="qtitle" id="qtitle">今日のクエスト</span><span class="qnum" id="qnum"></span></div><div class="qbar"><i id="qbar"></i></div><p class="qrew" id="qrew"></p></div>
     <div class="panel">
       <h2><span class="chapter-no" aria-hidden="true">I</span>どこから出す？</h2>
       <div class="chips" id="modes"></div>
@@ -697,6 +717,7 @@ body[data-screen="home"]>.wrap{background:none;border:0;box-shadow:none;max-widt
       <div class="score"><span id="sc"></span><small> / <span id="tot"></span></small></div>
       <p class="msg" id="rmsg"></p>
       <p class="lvup" id="rpt"></p>
+      <p class="questline" id="rquest"></p>
       <div id="jobclear" class="jobclear hide"><p id="jobclearmsg"></p><button class="btn" id="tojobs">仲間をさがす</button></div>
       <div id="wrongwrap" class="hide">
         <h2>まちがえた問題</h2>
@@ -1525,7 +1546,7 @@ body[data-screen="home"]>.wrap{background:none;border:0;box-shadow:none;max-widt
   function ticketsEarned(lv){ var n = 0; for (var i = 0; i < MILE.length; i++){ if (MILE[i] <= lv) n++; else break; } return n; }
   function nextMile(lv){ for (var i = 0; i < MILE.length; i++){ if (MILE[i] > lv) return MILE[i]; } return 0; }
   function syncTickets(){
-    var e = ticketsEarned(lvOf(P.xp).lv);
+    var e = ticketsEarned(lvOf(P.xp).lv) + ((P.quest && P.quest.tk) || 0);
     var used = allyIds().length;
     var t = Math.max(0, e - used);
     if (P.tickets !== t){ P.tickets = t; saveP(); }
@@ -1635,6 +1656,64 @@ body[data-screen="home"]>.wrap{background:none;border:0;box-shadow:none;max-widt
   function genreLabel(tag, g, locked){
     var label = el(tag, 'genre-title'); label.appendChild(uiIcon(locked ? 'lock' : g.id));
     label.appendChild(el('span', null, locked ? '未開架' : g.n)); return label;
+  }
+
+  // ===== デイリークエスト(1日50問) =====
+  // 数えるのは「その日にはじめて答えた問題」(まちがえた問題のやり直しは数えない)。日付は日本時間。
+  var QGOAL = 50, QPT = 150, QPT_ALT = 50, QWEEK = 7;
+  function yesterdayJST(){ return new Date(Date.now() + 9*HOUR - DAY).toISOString().slice(0,10); }
+  function quest(){
+    var Q = P.quest = P.quest || {day:'', n:0, done:false, last:'', streak:0, total:0, tk:0};
+    var t = todayJST();
+    if (Q.day !== t){ Q.day = t; Q.n = 0; Q.done = false; }
+    if (Q.last && Q.last !== t && Q.last !== yesterdayJST()) Q.streak = 0;   // 1日でも休むと連続はリセット
+    return Q;
+  }
+  // 1問答えるたびに呼ぶ。達成した瞬間だけ報酬を返す
+  function questTick(){
+    var Q = quest();
+    Q.n++;
+    if (Q.done || Q.n < QGOAL){ saveP(); return null; }
+    Q.done = true; Q.total = (Q.total || 0) + 1;
+    Q.streak = (Q.last === yesterdayJST() ? (Q.streak || 0) : 0) + 1;
+    Q.last = Q.day;
+    var r = {streak:Q.streak, pt:QPT, work:null, tk:0};
+    // 閃き確定：パーティの文豪の、まだ閃いていない作品から1つ
+    var cand = [];
+    party().forEach(function(id){ BMAP[id].w.forEach(function(w){ if (!learned(w[0])) cand.push({b:BMAP[id], w:w}); }); });
+    if (cand.length){ r.work = cand[Math.floor(Math.random() * cand.length)]; P.learned[r.work.w[0]] = 1; }
+    else r.pt += QPT_ALT;
+    // 7日連続ごとに招きの印
+    if (Q.streak % QWEEK === 0){ Q.tk = (Q.tk || 0) + 1; }
+    var t0 = P.tickets || 0;
+    P.xp = Math.min(P.xp + r.pt, 9e8);
+    syncTickets();
+    r.tk = (P.tickets || 0) - t0;
+    saveP();
+    return r;
+  }
+  function drawQuest(){
+    var Q = quest(), n = Math.min(Q.n, QGOAL), nextWeek = QWEEK - ((Q.streak || 0) % QWEEK);
+    $('quest').classList.toggle('done', !!Q.done);
+    $('qtitle').textContent = Q.done ? '今日のクエスト 達成!' : '今日のクエスト　50問に答えよう';
+    $('qnum').textContent = Q.done ? (Q.n > QGOAL ? Q.n + '問' : '50/50') : n + '/' + QGOAL + '問';
+    $('qbar').style.width = (n / QGOAL * 100) + '%';
+    $('qrew').textContent = Q.done
+      ? (Q.streak > 1 ? Q.streak + '日れんぞく達成中。' : '') + 'また明日も来てね。' + (nextWeek === QWEEK ? '' : 'あと' + nextWeek + '日つづけると招きの印!')
+      : '報酬：+' + QPT + 'pt と、パーティの文豪が作品を1つ必ず閃く。7日れんぞくで招きの印。' + (Q.streak ? '(いま' + Q.streak + '日れんぞく)' : '');
+  }
+  function questFx(r){
+    var box = document.createElement('div'); box.className = 'qclear';
+    box.appendChild(el('div', 'qtag', '本日のクエスト'));
+    box.appendChild(el('div', 'qbig', '五十問 達成!'));
+    var list = el('div', 'qitems'), items = ['+' + r.pt + 'pt'];
+    if (r.work) items.push(r.work.b.n + 'が『' + r.work.w[1] + '』を閃いた!');
+    if (r.tk) items.push('招きの印を' + r.tk + 'まい手に入れた!');
+    items.push(r.streak > 1 ? r.streak + '日れんぞく達成!' : 'また明日も50問!');
+    items.forEach(function(t, i){ var d = el('div', null, t); d.style.animationDelay = (0.35 + i * 0.25) + 's'; list.appendChild(d); });
+    box.appendChild(list);
+    fx.appendChild(box);
+    tone([523, 659, 784, 1047, 1319], 0.11);
   }
 
   function hud(){
@@ -1916,7 +1995,7 @@ body[data-screen="home"]>.wrap{background:none;border:0;box-shadow:none;max-widt
   }
 
   function buildHome(){
-    hud();
+    hud(); drawQuest();
     var g = nextGnorev();
     var gsub = g ? g.name + '(' + (+g.test.split('-')[1]) + '/' + (+g.test.split('-')[2]) + ')・第' + g.from + '〜' + g.to + '回' : '次のグノレブの範囲はまだ入っていません';
     if (!g && mode === 'gnorev') mode = 'all';
@@ -2116,7 +2195,8 @@ body[data-screen="home"]>.wrap{background:none;border:0;box-shadow:none;max-widt
       $('pos').textContent = 'まちがえた問題をやり直し(あと' + (queue.length - pos) + '問)';
       $('prog').style.width = (pos / queue.length * 100) + '%';
     } else {
-      $('pos').textContent = (first + 1) + ' / ' + init + ' 問目';
+      var Qp = quest();
+      $('pos').textContent = (first + 1) + ' / ' + init + ' 問目' + (Qp.done ? '' : '(今日 ' + Qp.n + '/' + QGOAL + ')');
       $('prog').style.width = (first / init * 100) + '%';
     }
     $('combo').textContent = combo >= 2 ? combo + 'れんぞく中' : '';
@@ -2174,7 +2254,7 @@ body[data-screen="home"]>.wrap{background:none;border:0;box-shadow:none;max-widt
   function undo(){
     if (!last || busy) return;
     pos = last.pos; first = last.first; right = last.right; wrongs.length = last.nw; combo = last.combo; gainedTotal = last.gt;
-    P.xp = last.xp; P.found = JSON.parse(last.found); P.stat = JSON.parse(last.stat); P.learned = JSON.parse(last.lrn); P.cnt = JSON.parse(last.cnt); P.tickets = last.tk; saveP();
+    P.xp = last.xp; P.found = JSON.parse(last.found); P.stat = JSON.parse(last.stat); P.learned = JSON.parse(last.lrn); P.cnt = JSON.parse(last.cnt); P.tickets = last.tk; P.quest = JSON.parse(last.qs) || undefined; saveP();
     if (E){ E.hp = last.ehp; E.dead = last.edead; drawEnemy(); }
     if (last.s) S[last.sid] = last.s; else delete S[last.sid];
     if (last.log && LOG.length && LOG[LOG.length-1].id === last.sid) LOG.pop();
@@ -2192,7 +2272,7 @@ body[data-screen="home"]>.wrap{background:none;border:0;box-shadow:none;max-widt
     var ok = res === 'o';
     var it = queue[pos], q = it.q, gained = 0, rankUp = false, L2 = 0;
     last = {pos:pos, first:first, right:right, nw:wrongs.length, combo:combo, gt:gainedTotal, xp:P.xp, sid:q.id, s:S[q.id] ? {l:S[q.id].l, d:S[q.id].d} : null,
-            ehp:E ? E.hp : 0, edead:E ? E.dead : false, found:JSON.stringify(P.found || {}), stat:JSON.stringify(P.stat || {}), lrn:JSON.stringify(P.learned || {}), cnt:JSON.stringify(P.cnt || {}), tk:P.tickets, log:!it.retry};
+            ehp:E ? E.hp : 0, edead:E ? E.dead : false, found:JSON.stringify(P.found || {}), stat:JSON.stringify(P.stat || {}), lrn:JSON.stringify(P.learned || {}), cnt:JSON.stringify(P.cnt || {}), tk:P.tickets, qs:JSON.stringify(P.quest || null), log:!it.retry};
     if (!it.retry){
       first++;
       var L = (S[q.id] && S[q.id].l) || 0;
@@ -2201,6 +2281,8 @@ body[data-screen="home"]>.wrap{background:none;border:0;box-shadow:none;max-widt
       saveS();
       LOG.push({t:todayJST(), id:q.id, k:q.k, q:q.q, e:q.e, a:q.a, r:res}); saveLog();
       if (ok){ st()[q.k] = (st()[q.k] || 0) + 1; saveP(); }
+      var qr = questTick();
+      if (qr) gainedTotal += qr.pt;
       if (ok){ right++; rankUp = L2 > L; } else { q._res = res; wrongs.push(q); }
     }
     var wait = 1500;
@@ -2241,6 +2323,11 @@ body[data-screen="home"]>.wrap{background:none;border:0;box-shadow:none;max-widt
       combo = 0; encourage();
       var o = document.createElement('div'); o.className = 'ouch'; o.textContent = res === 'k' ? '字形をていねいに!' : (E ? E.n + 'のこうげき!' : ''); fx.appendChild(o);
     }
+    if (qr){
+      var qat = wait;
+      setTimeout(function(){ clearFx(); scrim(); questFx(qr); }, qat);
+      wait = qat + 3400;
+    }
     pos++;
     busy = true;
     setTimeout(function(){
@@ -2266,6 +2353,8 @@ body[data-screen="home"]>.wrap{background:none;border:0;box-shadow:none;max-widt
       s.textContent = (q.k === 'W' ? '【書き】' : q.k === 'R' ? '【読み】' : '') + (q.k === 'W' ? (q.e || q.q) : q.q) + (q._res === 'k' ? '(字形)' : ''); b.textContent = q.a; li.appendChild(s); li.appendChild(b); ul.appendChild(li);
     });
     $('wrongwrap').classList.toggle('hide', wrongs.length === 0);
+    var Qr = quest();
+    $('rquest').textContent = Qr.done ? '今日のクエスト 達成ずみ' + (Qr.streak > 1 ? '(' + Qr.streak + '日れんぞく)' : '') : '今日のクエスト ' + Qr.n + '/' + QGOAL + '問 ・ あと' + (QGOAL - Qr.n) + '問で達成!';
     var more = dueFor(mode, kind).length;
     $('again').disabled = more === 0;
     $('again').textContent = more ? 'つづける' : 'ぜんぶおわり';
@@ -2318,7 +2407,10 @@ body[data-screen="home"]>.wrap{background:none;border:0;box-shadow:none;max-widt
         P.found = Object.assign({}, o.P.found || {}, P.found || {});
         var os = o.P.stat || {}; P.stat = P.stat || {W:0,R:0,K:0};
         ['W','R','K'].forEach(function(k){ P.stat[k] = Math.max(P.stat[k] || 0, os[k] || 0); });
-        P.streak = Math.max(P.streak || 0, o.P.streak || 0); }
+        P.streak = Math.max(P.streak || 0, o.P.streak || 0);
+        if (o.P.quest){ var aq = P.quest || {}, bq = o.P.quest;
+          var nq = ((bq.total || 0) > (aq.total || 0) || (bq.day || '') > (aq.day || '') || ((bq.day === aq.day) && (bq.n || 0) > (aq.n || 0))) ? Object.assign({}, bq) : Object.assign({}, aq);
+          nq.tk = Math.max(aq.tk || 0, bq.tk || 0); nq.total = Math.max(aq.total || 0, bq.total || 0); P.quest = nq; } }
       if (o.L && o.L.length){ var seen = {}; LOG.forEach(function(x){ seen[x.t + x.id + x.r] = 1; }); o.L.forEach(function(x){ if (!seen[x.t + x.id + x.r]) LOG.push(x); }); LOG.sort(function(a, b){ return a.t < b.t ? -1 : a.t > b.t ? 1 : 0; }); }
       saveS(); saveP(); saveLog(); initParty(); buildHome();
       $('bkmsg').textContent = '読み込みました(' + n + '問分を更新)。';
