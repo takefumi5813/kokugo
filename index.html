@@ -447,6 +447,68 @@ button:focus-visible,a:focus-visible,textarea:focus-visible{outline:3px solid va
 }
 @media(prefers-reduced-motion:reduce){.enemy.hit .eicon{animation:none}.enemy .ehp i,.chip,.choice{transition:none}}
 
+
+/* ===== 書棚に囲まれた執筆室：表示専用 ===== */
+body{background:#30271f;isolation:isolate}
+body::before{content:"";position:fixed;inset:0;z-index:-1;background:linear-gradient(rgba(28,21,15,.12),rgba(28,21,15,.28)),url("assets/study-room.webp") center center/cover no-repeat;pointer-events:none}
+body>.wrap{max-width:860px;width:calc(100% - 80px);margin:28px auto;padding:26px 30px 36px;background:color-mix(in srgb,var(--card) 96%,transparent);border:1px solid var(--line);border-radius:4px;box-shadow:0 18px 70px rgba(15,10,5,.4)}
+.book-cover{padding:10px 0 20px;margin-bottom:20px}
+.book-cover .lead{font-size:14px}.cover-motifs{min-height:105px}.cover-motifs img:nth-child(2){height:120px}
+.jobbar{margin-bottom:24px}
+.ui-icon{width:28px;height:28px;flex:none;vertical-align:middle}
+#start{display:flex;align-items:center;justify-content:center;gap:14px;min-height:64px;letter-spacing:.2em}
+#start .ui-icon{width:32px;height:32px}
+.jobbar .jicon>.ui-icon{width:40px;height:40px;padding:4px}
+.mute{display:grid;place-items:center;color:var(--sub)}.mute .ui-icon{width:21px;height:21px}
+.genre-title{display:flex;gap:12px;align-items:center;min-width:0;line-height:1.5}
+.genre-title>span{min-width:0;overflow-wrap:anywhere}
+.genre-title>.ui-icon{width:42px;height:42px;padding:7px;background:var(--ctx);border:1px solid var(--line);color:var(--primary);border-radius:2px}
+.genre{padding:18px}.genre small{margin:12px 0 4px;line-height:1.8}.genre em{margin-top:8px;font-size:12px}
+.genre.locked{opacity:.78}.genre.locked .ui-icon{color:var(--sub)}
+#jobs{background:linear-gradient(rgba(24,18,13,.3),rgba(24,18,13,.5)),url("assets/study-room.webp") center/cover no-repeat}
+#jobs>.wrap{max-width:860px;width:calc(100% - 80px);margin:28px auto;padding:28px 30px 36px;background:color-mix(in srgb,var(--card) 97%,transparent);border:1px solid var(--line);box-shadow:0 18px 70px rgba(15,10,5,.4);min-height:calc(100dvh - 56px)}
+#jobs>.wrap>.meta{font-size:20px}
+#play>.meta{font-family:var(--serif);margin-bottom:12px}
+.enemy{display:block;height:310px;padding:0;border:1px solid #745336;border-radius:3px;overflow:hidden;background:#5b432e url("assets/study-room.webp") center 65%/cover no-repeat;box-shadow:inset 0 0 40px rgba(22,14,8,.2),0 4px 12px var(--paper-shadow);margin-bottom:14px}
+.scene-label{position:absolute;top:14px;left:16px;font-family:var(--serif);font-size:11px;letter-spacing:.18em;color:#fff0d0;background:rgba(36,27,20,.7);border:1px solid rgba(228,205,163,.4);padding:5px 10px}
+.enemy .eicon{position:absolute;left:50%;bottom:88px;transform:translateX(-50%);width:142px;height:142px;z-index:1}
+.enemy .eicon img{width:142px;height:142px;filter:drop-shadow(0 6px 3px rgba(0,0,0,.4));position:relative}
+.enemy .eicon::before{content:"";position:absolute;inset:12px -14px -12px;background:radial-gradient(ellipse,rgba(255,241,202,.6),transparent 70%);pointer-events:none}
+.enemy .enemy-details{position:absolute;bottom:0;left:0;right:0;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:3px 14px;background:rgba(33,27,22,.92);border-top:1px solid #9c7c4c;padding:11px 18px 13px;color:#fff2dc}
+.enemy .encaption,.enemy .ename,.enemy .esource{grid-column:1/-1}
+.enemy .encaption{font-size:9px;color:#d5b57d;letter-spacing:.15em}
+.enemy .ename{color:#fff2dc;font-size:22px;line-height:1.3}
+.enemy .esource{color:#deceb5;font-size:11px}
+.enemy .ehp{grid-column:1;background:#66513e;height:4px;margin-top:3px}.enemy .ehp i{background:#c3a465}
+.enemy .ehpn{grid-column:2;color:#deceb5;font-size:10px}
+.enemy.dead .eicon{transform:translateX(-50%)}.enemy.dead .ename::after{color:#d5b57d}
+#play .panel{position:relative;border:5px solid #654a33;border-top-width:10px;padding:22px 24px;background:linear-gradient(90deg,transparent 34px,rgba(156,68,60,.12) 34px,rgba(156,68,60,.12) 35px,transparent 35px),var(--card);box-shadow:0 8px 0 #3e2c20,0 16px 25px rgba(30,19,10,.2);border-radius:2px}
+#play .panel::before{content:"";position:absolute;left:12px;right:12px;top:-8px;height:1px;background:rgba(239,211,167,.35);pointer-events:none}
+.bar{margin:10px 0 16px;background:var(--line)}
+#pad{background-color:#fffdf7;box-shadow:inset 0 0 20px rgba(111,78,41,.04)}
+.scrim{background:linear-gradient(rgba(18,17,14,.82),rgba(18,17,14,.9)),url("assets/study-room.webp") center/cover no-repeat}
+@media(min-width:1200px){body>.wrap,#jobs>.wrap{max-width:820px}}
+@media(max-width:600px){
+ body::before{background-image:linear-gradient(rgba(28,21,15,.12),rgba(28,21,15,.28)),url("assets/study-room-mobile.webp");background-position:center top;background-size:cover}
+ #jobs{background-image:linear-gradient(rgba(24,18,13,.3),rgba(24,18,13,.5)),url("assets/study-room-mobile.webp")}
+ body>.wrap{width:calc(100% - 24px);margin:12px auto;padding:16px 14px 28px}
+ #jobs>.wrap{width:calc(100% - 24px);margin:12px auto;padding:18px 14px 28px;min-height:calc(100dvh - 24px)}
+ .hud{margin-bottom:14px}.book-cover{grid-template-columns:minmax(0,1fr) 105px;gap:0;padding-bottom:18px;margin-bottom:18px}
+ .book-kicker{font-size:8px;letter-spacing:0;gap:5px}h1{font-size:34px}.book-cover .lead{font-size:12px}
+ .cover-motifs img{width:48px;height:60px;margin:0 -12px}.cover-motifs img:nth-child(2){width:78px;height:100px}
+ .cover-art figcaption{font-size:8px}.jobbar{margin-bottom:20px}.panel{padding:18px 12px}
+ .genre{padding:14px}.genre-title{gap:9px;font-size:16px}.genre-title>.ui-icon{width:37px;height:37px;padding:6px}
+ .enemy{height:260px;background-position:center 65%}.scene-label{top:10px;left:10px;font-size:10px;padding:4px 8px}
+ .enemy .eicon,.enemy .eicon img{width:112px;height:112px}.enemy .eicon{bottom:94px}
+ .enemy .enemy-details{padding:10px 12px;gap:3px 10px}.enemy .ename{font-size:19px}.enemy .esource{font-size:10px}
+ #play .panel{padding:17px 12px;border-width:4px;border-top-width:8px}
+ .q{min-height:3.5em;margin:16px 0 20px}.q.big{font-size:30px}.rank{font-size:13px}.rank small{font-size:9px}
+ .tags{gap:5px}.tag{font-size:11px;padding:3px 7px}#pad{height:44vh;min-height:260px}
+ .wgrid{grid-template-columns:repeat(auto-fill,minmax(min(100%,210px),1fr))}
+ #jobs>.wrap>.meta{font-size:17px}.tabs{gap:0}.tabbtn{padding:12px 8px;font-size:11px}
+}
+@media(max-width:360px){.book-cover{grid-template-columns:minmax(0,1fr) 88px}.cover-motifs img{width:42px;margin:0 -12px}.cover-motifs img:nth-child(2){width:72px}.book-kicker::before{width:20px;height:24px}.book-kicker{font-size:7px}h1{font-size:32px}.book-cover .lead{font-size:11px}.book-cover .lead br{display:none}}
+
 </style>
 </head>
 <body>
@@ -459,8 +521,6 @@ button:focus-visible,a:focus-visible,textarea:focus-visible{outline:3px solid va
       <figure class="cover-art"><div class="cover-motifs" id="covermotifs" aria-hidden="true"></div><figcaption>ことばの書斎</figcaption></figure>
     </header>
     <button class="jobbar" id="jobbtn" type="button"><span class="jicon" id="jicon"></span><span class="jtxt"><b id="jname"></b><small id="jprog"></small></span><span class="jgo">仲間と技 ›</span></button>
-    <p class="reading-note">漢字の書きは画面に大きく書いてから答えを見る。読みは頭の中で答えてから、知識と語彙は四つの中から答えを選ぼう。</p>
-    <p class="tip">漢字の書きは、<b>他の問題より多くのポイント</b>がもらえます。</p>
     <div class="panel">
       <h2><span class="chapter-no" aria-hidden="true">I</span>どこから出す？</h2>
       <div class="chips" id="modes"></div>
@@ -468,7 +528,7 @@ button:focus-visible,a:focus-visible,textarea:focus-visible{outline:3px solid va
       <div class="chips" id="kinds"></div>
       <h2><span class="chapter-no" aria-hidden="true">III</span>問題の数</h2>
       <div class="chips" id="counts"></div>
-      <button class="btn" id="start">書斎で学びはじめる</button>
+      <button class="btn" id="start"><svg class="ui-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M30 5l5 4-15 24-6-5z"/><path d="M14 28c-9 2-1 9-9 12 10 0 16-3 15-9"/><path d="M25 13l5 3"/></svg><span>今日の執筆</span></button>
       <p class="info" id="dueinfo"></p>
     </div>
     <div class="foot">
@@ -496,7 +556,7 @@ button:focus-visible,a:focus-visible,textarea:focus-visible{outline:3px solid va
 
   <section id="play" class="hide">
     <div class="meta"><span id="pos"></span><span class="combo" id="combo"></span><button class="link" id="quit">やめる</button></div>
-    <div class="enemy" id="enemy"><span class="eicon" id="eicon" aria-hidden="true"></span><span class="encaption">物語から現れた影</span><span class="ename" id="ename"></span><span class="esource" id="esource"></span><span class="ehp"><i id="ehp"></i></span><span class="ehpn" id="ehpn"></span></div>
+    <div class="enemy" id="enemy"><span class="eicon" id="eicon" aria-hidden="true"></span><span class="scene-label">書斎にひらく、物語</span><div class="enemy-details"><span class="encaption">物語から現れた影</span><span class="ename" id="ename"></span><span class="esource" id="esource"></span><span class="ehp"><i id="ehp"></i></span><span class="ehpn" id="ehpn"></span></div></div>
     <div class="undo"><button class="link hide" id="undo" type="button">← 押しまちがえた(ひとつ前にもどる)</button></div>
     <div class="bar"><i id="prog"></i></div>
     <div class="panel" id="card">
@@ -1470,14 +1530,31 @@ button:focus-visible,a:focus-visible,textarea:focus-visible{outline:3px solid va
     return COMBOS.filter(function(c){ return c.k.every(function(k){ return e.indexOf(k) >= 0; }); });
   }
 
+  // 共通の装丁アイコン。ゲームの状態や抽選には関与しない。
+  var UI_ICONS = {"brush": "<path d=\"M30 5l5 4-15 24-6-5z\"/><path d=\"M14 28c-9 2-1 9-9 12 10 0 16-3 15-9\"/><path d=\"M25 13l5 3\"/>", "books": "<path d=\"M8 7h7v30H8zm10 3h7v27h-7zm10-2 7-2 7 29-7 2z\"/><path d=\"M8 13h7m3 3h7m6-2 6-2M6 39h35\"/>", "meiji": "<path d=\"M5 10q10-4 19 2 9-6 19-2v27q-10-4-19 2-9-6-19-2zM24 12v27M10 17l9 2m-9 4 9 2m10-6 9-2m-9 8 9-2\"/>", "douwa": "<path d=\"m24 4 5 12 13 1-10 9 3 13-11-7-11 7 3-13-10-9 13-1zM8 5v6M5 8h6m28 27v8m-4-4h8\"/>", "taisho": "<path d=\"m34 5 9 9-20 20-12 3 3-12zM15 26l8 8m11-29-2 15 11-6M11 37l-5 5m8 0h27\"/>", "burai": "<path d=\"M27 4c1 10-9 12-7 20-5-1-6-5-6-8C2 28 12 42 25 42c16 0 21-19 9-27 1 8-3 10-5 11 2-9-7-12-2-22zM23 31c-7 6-3 12 3 11 7-2 5-8 2-12-1 5-3 5-5 1z\"/>", "kaiki": "<path d=\"M34 6C9-1 1 26 16 38c11 9 25 3 28-6C25 39 14 17 34 6zM36 12v8m-4-4h8M13 6v4m-2-2h4\"/>", "koten": "<path d=\"M12 6h24v32H12M12 6C4 3 4 14 12 14m24 17c8-3 8 10 0 10H12c-8 0-8-10 0-10h24M20 13v11m8-11v11\"/>", "eibei": "<path d=\"M7 8l25 4v16C22 40 9 32 7 22zM14 16l3 1m6 1 3 1m-12 5q6 6 12 2M33 17l9-2v16c-5 9-12 12-18 6m9-11 3-1m-7 9 7-3\"/>", "roshia": "<path d=\"m17 27-4 4c-9 9-17-3-10-10l9-9c7-7 15-2 14 4m5 5 4-4c9-9 17 3 10 10l-9 9c-7 7-15 2-14-4M15 30l18-18\" transform=\"translate(1 0) scale(.94)\"/>", "oshu": "<circle cx=\"24\" cy=\"22\" r=\"16\"/><ellipse cx=\"24\" cy=\"22\" rx=\"7\" ry=\"16\"/><path d=\"M8 22h32M12 12h24M12 32h24M18 44h12m-6-6v6\"/>", "chugoku": "<path d=\"M9 7h30v34H9zM17 14h14m-7 0v20m-7-13h14m-14 6h14m-17 7h20M5 7h4m30 0h4\"/>", "lock": "<rect x=\"11\" y=\"21\" width=\"26\" height=\"21\" rx=\"2\"/><path d=\"M16 21v-7a8 8 0 0 1 16 0v7m-8 8v6\"/>", "volume": "<path d=\"M6 19h9l10-9v28l-10-9H6zM31 16q7 8 0 16m6-22q12 14 0 28\"/>", "muted": "<path d=\"M6 19h9l10-9v28l-10-9H6zM32 18l10 12m0-12L32 30\"/>"};
+  function uiIcon(name){
+    var ns = 'http://www.w3.org/2000/svg', icon = document.createElementNS(ns, 'svg');
+    icon.setAttribute('class', 'ui-icon'); icon.setAttribute('viewBox', '0 0 48 48');
+    icon.setAttribute('fill', 'none'); icon.setAttribute('stroke', 'currentColor');
+    icon.setAttribute('stroke-width', '2'); icon.setAttribute('stroke-linecap', 'round'); icon.setAttribute('stroke-linejoin', 'round');
+    icon.setAttribute('aria-hidden', 'true'); icon.setAttribute('focusable', 'false');
+    icon.innerHTML = UI_ICONS[name] || UI_ICONS.books;
+    return icon;
+  }
+  function genreLabel(tag, g, locked){
+    var label = el(tag, 'genre-title'); label.appendChild(uiIcon(locked ? 'lock' : g.id));
+    label.appendChild(el('span', null, locked ? '未開架' : g.n)); return label;
+  }
+
   function hud(){
     var l = lvOf(P.xp);
     $('lvH').textContent = 'レベル ' + l.lv;
     $('lvH').className = 'lv t' + Math.min(Math.floor((l.lv - 1) / 10), 7);
     $('ptH').textContent = P.xp + 'pt(つぎまで' + l.rest + ')' + (P.streak > 1 ? '・' + P.streak + '日れんぞく' : '');
-    $('mute').textContent = P.mute ? '🔇' : '🔊';
+    $('mute').textContent = ''; $('mute').appendChild(uiIcon(P.mute ? 'muted' : 'volume'));
+    $('mute').setAttribute('aria-label', P.mute ? '音をオンにする' : '音をオフにする');
     var e = equipped(), n = allyIds().length, pt = party();
-    $('jicon').textContent = pt.length ? '' : '蔵'; if (pt.length) $('jicon').appendChild(authorIcon(BMAP[pt[0]], 44));
+    $('jicon').textContent = ''; $('jicon').appendChild(pt.length ? authorIcon(BMAP[pt[0]], 44) : uiIcon('books'));
     $('jname').textContent = pt.length ? pt.map(function(id){ return BMAP[id].n; }).join('・') :
       (n ? 'パーティがからっぽです' : 'まだ仲間がいません');
     var nm = nextMile(l.lv);
@@ -1584,7 +1661,7 @@ button:focus-visible,a:focus-visible,textarea:focus-visible{outline:3px solid va
       var mine = BUNGO.filter(function(b2){ return b2.g === g.id && hasAlly(b2.id); });
       if (!mine.length) return;
       var sec = el('div', 'tier');
-      sec.appendChild(el('h3', null, g.i + ' ' + g.n));
+      sec.appendChild(genreLabel('h3', g, false));
       mine.forEach(function(b2){
         var on = inParty(b2.id);
         var bs = el('div', 'bungo' + (on ? ' inparty' : ''));
@@ -1665,7 +1742,7 @@ button:focus-visible,a:focus-visible,textarea:focus-visible{outline:3px solid va
       var open = condOk(g.c), empty = !pool.length;
       var btn = el('button', 'genre' + (open ? '' : ' locked') + (empty ? ' done' : ''));
       btn.type = 'button';
-      btn.appendChild(el('b', null, open ? g.i + ' ' + g.n : '🔒 ???'));
+      btn.appendChild(genreLabel('b', g, !open));
       btn.appendChild(el('small', null, open ? g.d : condText(g.c) + '（いま ' + condProgress(g.c) + '）'));
       if (open) btn.appendChild(el('em', null, empty ? 'この結社は全員が仲間' : 'まだ見ぬ文豪 ' + pool.length + '人' + (mine ? '・仲間 ' + mine + '人' : '')));
       if (open && !empty && P.tickets) btn.onclick = function(){
