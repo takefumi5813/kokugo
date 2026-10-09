@@ -520,15 +520,79 @@ body>.wrap{max-width:860px;width:calc(100% - 80px);margin:28px auto;padding:26px
 @media(max-width:600px){.enemy .eicon{width:132px;height:132px;bottom:104px}.enemy .eicon img{width:100%;height:100%}}
 @media(prefers-reduced-motion:reduce){.enemy.hit .eicon{animation:none}}
 
+
+/* 表紙と執筆の支度：書斎の灯りと古書の装丁 */
+body[data-screen="opening"]::before,body[data-screen="home"]::before{background-image:linear-gradient(90deg,rgba(21,16,12,.48),rgba(21,16,12,.12),rgba(21,16,12,.48)),url("assets/study-room.webp")}
+body[data-screen="opening"]{color:#f3e5c9}
+body[data-screen="home"]::before{background-image:linear-gradient(rgba(21,16,12,.48),rgba(21,16,12,.48)),url("assets/study-room.webp")}
+#opening{position:relative;isolation:isolate;min-height:100svh;display:flex;align-items:center;justify-content:center;padding:70px 24px 110px;background:linear-gradient(180deg,rgba(19,15,11,.28),rgba(19,15,11,.24) 30%,rgba(19,15,11,.73));text-align:center}
+#opening.hide{display:none}
+.opening-frame{position:absolute;inset:24px;border:1px solid #d4b47b55;pointer-events:none}
+.opening-frame::before,.opening-frame::after{content:"";position:absolute;width:44px;height:44px;border-color:#cdb17a;border-style:solid}
+.opening-frame::before{left:-1px;top:-1px;border-width:2px 0 0 2px}.opening-frame::after{right:-1px;bottom:-1px;border-width:0 2px 2px 0}
+.opening-content{width:min(100%,520px);text-shadow:0 2px 20px #140e09}
+.opening-kicker{font:13px var(--serif);letter-spacing:.45em;color:#ead0a1;margin:0 0 30px}
+.opening-seal{width:64px;height:64px;border:1px solid #d9bb80;transform:rotate(45deg);display:grid;place-items:center;margin:0 auto 30px;background:#21170e66;box-shadow:0 0 0 5px #d9bb8014}
+.opening-seal .ui-icon{width:40px;height:40px;transform:rotate(-45deg);color:#e4c688}
+#opening-title{font-family:"Yuji Syuku",var(--serif);font-size:clamp(64px,10vw,100px);letter-spacing:.12em;line-height:1.3;font-weight:400;margin:0;color:#f7ecd6}
+#opening-title span{font:18px var(--serif);letter-spacing:.28em;color:#e8d4b1;margin-top:18px}
+.opening-rule{display:flex;align-items:center;gap:18px;justify-content:center;color:#c7a76f;font-size:9px;margin:28px auto 20px;width:240px}
+.opening-rule::before,.opening-rule::after{content:"";height:1px;background:linear-gradient(90deg,transparent,#c7a76f);flex:1}.opening-rule::after{transform:rotate(180deg)}
+.opening-lead{font:16px/2 var(--serif);letter-spacing:.12em;color:#ecdfc5;margin:0 0 34px}
+.opening-continue{width:min(100%,340px);font-family:var(--serif);font-size:21px;letter-spacing:.15em;min-height:64px;background:linear-gradient(125deg,#e5c58c,#bb955a);border:1px solid #edd4a3;color:#2b2014;box-shadow:0 0 0 4px #d7b7781c,0 10px 35px #140d09aa;text-shadow:none}
+.opening-continue span{margin-left:18px;font-size:18px}.opening-continue:hover{filter:brightness(1.08)}
+.opening-record{font-size:12px;letter-spacing:.1em;color:#d2c0a5;margin-top:22px}
+.opening-colophon{position:absolute;bottom:36px;left:0;width:100%;font:12px var(--serif);letter-spacing:.3em;color:#cfbb99;margin:0}
+body[data-screen="home"]>.wrap{background:none;border:0;box-shadow:none;max-width:860px;width:calc(100% - 80px);padding:0 0 24px;margin:22px auto;color:#f2e8d2}
+#home,#jobs{--card:#2a241e;--ink:#f2e8d2;--sub:#c7baa3;--line:#746044;--ctx:#352b22;--primary:#d5b47b;--primary-ink:#292014;--soft:#44382b;--gold:#d5b47b}
+.home-masthead{display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #c4a66c55;font:11px var(--serif);letter-spacing:.2em;color:#e0c99f}
+.home-masthead .link{font-size:11px;color:#e0c99f;letter-spacing:.08em}
+#home .hud{border:0;margin:16px 0 0;padding:0;gap:14px}#home .hud .lv{background:#241b13bb;border-color:#b99a5e;color:#ead5ac;font-family:var(--serif)}#home .hud .pt{color:#e4d5bc;text-shadow:0 2px 6px #17110b}
+#home .mute{background:#2a2118cc;color:#e2c895;border-color:#8b714e}
+#home .book-cover{border:0;margin:0;padding:24px 12px 26px;grid-template-columns:1fr 180px;text-shadow:0 2px 16px #130d08}
+#home .book-kicker{color:#d5b47b;font-size:11px;letter-spacing:.15em;margin-bottom:10px}#home .book-kicker::before{display:none}
+#home h1{font-size:38px;letter-spacing:.15em;margin-bottom:10px}#home .lead{color:#decfb6;font-size:14px}
+#home .cover-art::before{background:radial-gradient(ellipse,#d9b67126,transparent 68%);border:0;inset:-15px;z-index:0}#home .cover-art figcaption{color:#d2be98}#home .cover-motifs{position:relative;min-height:110px}#home .cover-motifs img{width:78px;height:90px}#home .cover-motifs img:nth-child(2){width:106px;height:120px}
+#home .jobbar,#home>.panel{background:linear-gradient(135deg,#342a21ed,#211b16f5);border:1px solid #a58a5a;border-radius:3px;box-shadow:inset 0 0 0 4px #211b16,inset 0 0 0 5px #8d744942,0 12px 30px #130d0855}
+#home .jobbar{padding:17px 20px;margin-bottom:22px}#home .jobbar.alert{border-color:#cfab69}#home .jobbar b{font-family:var(--serif);color:#f1dfbd;font-size:16px;font-weight:600}
+#home>.panel{position:relative;padding:28px 30px}#home>.panel::before,#home>.panel::after{content:"◆";position:absolute;color:#c4a56d;font-size:9px;top:-8px;background:#32271d;padding:0 8px}#home>.panel::before{left:24px}#home>.panel::after{right:24px}
+#home .panel h2{display:flex;align-items:center;gap:10px;font-size:14px;letter-spacing:.12em;margin:0 0 12px;color:#e5d5b6}#home .panel h2::after{content:"";height:1px;background:linear-gradient(90deg,#b99a5c55,transparent);flex:1}#home .chapter-no{margin-right:0;font-size:15px;color:#d5b47b}
+#home .chips{display:grid;gap:8px;margin-bottom:26px}#modes{grid-template-columns:repeat(3,minmax(0,1fr))}#kinds{grid-template-columns:repeat(5,minmax(0,1fr))}#counts{grid-template-columns:repeat(4,minmax(0,1fr))}
+#home .chip{text-align:center;min-width:0;padding:12px 8px;background:#19151044;border-color:#786044;color:#d9ccb5;font-size:13px;border-radius:2px;font-weight:500;box-shadow:none}#home .chip small{color:inherit;font-size:10px;line-height:1.6;margin-top:4px}#home .chip[aria-pressed="true"]{background:linear-gradient(135deg,#c1a16b2e,#c1a16b14);border-color:#ddba7a;color:#ffe5b2;box-shadow:inset 0 -2px #c6a366}#home .chip:hover:not(:disabled){border-color:#d5b47b;background:#bc9c6426}
+#home #start{background:linear-gradient(115deg,#e1c18a,#bc975f);color:#302317;border:1px solid #e9cc96;box-shadow:inset 0 0 0 3px #c5a26b,inset 0 0 0 4px #f5d9a54d,0 5px 16px #100b0755;font-size:22px;min-height:64px}#home #start:hover:not(:disabled){filter:brightness(1.08)}#home .info{color:#bdac91;font-size:11px;margin-top:15px}
+.archive-tools{margin-top:24px;border-top:1px solid #b1976355;color:#e0cda8;text-align:center;font-size:12px}.archive-tools summary{cursor:pointer;list-style:none;padding:18px;min-height:48px;font-family:var(--serif);letter-spacing:.1em}.archive-tools summary::after{content:" ＋";color:#d5b47b}.archive-tools[open] summary::after{content:" −"}.archive-tools summary::-webkit-details-marker{display:none}#home .foot{margin:0;padding:0 16px 16px;border:0;background:#211b15dd}#home .foot::before{display:none}#home .credit a{color:#dec08a}
+#jobs>.wrap{background:#241d16f5;border:1px solid #a58a5a;box-shadow:inset 0 0 0 5px #8d744922,0 18px 70px #0f0a05aa}#jobs .tabbtn{color:var(--sub)}#jobs .tabbtn.on{color:var(--primary);border-color:var(--primary)}
+#home button:focus-visible,#opening button:focus-visible,#home summary:focus-visible,#jobs button:focus-visible{outline:2px solid #f4d697;outline-offset:4px}
+@media(max-width:600px){
+ body[data-screen="opening"]::before,body[data-screen="home"]::before{background-image:linear-gradient(rgba(21,16,12,.48),rgba(21,16,12,.55)),url("assets/study-room-mobile.webp")}
+ #opening{padding:70px 28px 100px}.opening-frame{inset:14px}.opening-kicker{margin-bottom:26px;font-size:11px}.opening-seal{width:50px;height:50px;margin-bottom:26px}.opening-seal .ui-icon{width:32px;height:32px}#opening-title{font-size:70px}#opening-title span{font-size:16px}.opening-lead{font-size:13px;letter-spacing:.08em}.opening-continue{font-size:19px;min-height:60px}.opening-colophon{bottom:30px;font-size:11px}
+ body[data-screen="home"]>.wrap{width:calc(100% - 32px);margin:10px auto;padding:0 0 16px}#home .hud{gap:8px;margin-top:14px}#home .hud .pt{font-size:11px}#home .hud .lv{font-size:11px;padding:5px 8px}#home .book-cover{padding:22px 2px;grid-template-columns:minmax(0,1fr) 94px;gap:0}#home h1{font-size:30px;letter-spacing:.08em}#home .book-kicker{font-size:9px;letter-spacing:.02em}#home .lead{font-size:11px}#home .cover-motifs{min-height:80px}#home .cover-motifs img{width:47px;height:60px;margin:0 -14px}#home .cover-motifs img:nth-child(2){width:70px;height:90px}#home .cover-art figcaption{font-size:8px}#home .jobbar{padding:14px;margin-bottom:20px}#home .jobbar b{font-size:14px}#home>.panel{padding:23px 16px}#home .chip{font-size:11px;padding:11px 5px;line-height:1.7}#home .chip small{font-size:9px}#home .chips{gap:6px;margin-bottom:23px}#kinds{grid-template-columns:repeat(2,minmax(0,1fr))}#kinds .chip:first-child{grid-column:1/-1;padding:8px}#home .panel h2{font-size:13px}#home #start{font-size:21px;min-height:60px}
+}
+@media(max-width:360px){#home h1{font-size:27px}#home .lead{font-size:10px}#home .hud{flex-wrap:wrap}#home .hud .pt{flex:1;font-size:10px}#home>.panel{padding:22px 12px}.opening-lead{font-size:12px}#opening-title{font-size:62px}}
+
 </style>
 </head>
-<body>
-<div class="wrap">
+<body data-screen="opening">
+<section id="opening" aria-labelledby="opening-title">
+  <div class="opening-frame" aria-hidden="true"></div>
+  <div class="opening-content">
+    <p class="opening-kicker">ことばの書斎</p>
+    <div class="opening-seal" aria-hidden="true"><svg class="ui-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M30 5l5 4-15 24-6-5z"/><path d="M14 28c-9 2-1 9-9 12 10 0 16-3 15-9"/><path d="M25 13l5 3"/></svg></div>
+    <h1 id="opening-title">国 語<span>一 問 一 答</span></h1>
+    <div class="opening-rule" aria-hidden="true">◆</div>
+    <p class="opening-lead">文豪たちと綴る、ことばの物語。</p>
+    <button class="btn opening-continue" id="continue-writing" type="button">執筆をつづける<span aria-hidden="true"> →</span></button>
+    <p class="opening-record" id="opening-record"></p>
+  </div>
+  <p class="opening-colophon">一字ずつ、一頁ずつ。</p>
+</section>
+<div class="wrap hide" id="app">
 
-  <section id="home">
+  <section id="home" class="hide">
+    <nav class="home-masthead" aria-label="画面移動"><span>ことばの書斎</span><button class="link" id="titleback" type="button">表紙へ戻る</button></nav>
     <div class="hud"><span class="lv" id="lvH"></span><span class="pt" id="ptH"></span><button class="mute" id="mute" type="button" aria-label="音のオンオフ">🔊</button></div>
     <header class="book-cover">
-      <div><p class="book-kicker">文豪たちと、ことばの旅へ</p><h1>国語<span>一問一答</span></h1><p class="lead">ことばを集め、物語をひらく。<br>今日も、書斎の一頁から。</p></div>
+      <div><p class="book-kicker">新しい一頁を、ここから。</p><h1>執筆の支度</h1><p class="lead">ことばを集め、物語をひらく。</p></div>
       <figure class="cover-art"><div class="cover-motifs" id="covermotifs" aria-hidden="true"></div><figcaption>ことばの書斎</figcaption></figure>
     </header>
     <button class="jobbar" id="jobbtn" type="button"><span class="jicon" id="jicon"></span><span class="jtxt"><b id="jname"></b><small id="jprog"></small></span><span class="jgo">仲間と技 ›</span></button>
@@ -539,10 +603,10 @@ body>.wrap{max-width:860px;width:calc(100% - 80px);margin:28px auto;padding:26px
       <div class="chips" id="kinds"></div>
       <h2><span class="chapter-no" aria-hidden="true">III</span>問題の数</h2>
       <div class="chips" id="counts"></div>
-      <button class="btn" id="start"><svg class="ui-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M30 5l5 4-15 24-6-5z"/><path d="M14 28c-9 2-1 9-9 12 10 0 16-3 15-9"/><path d="M25 13l5 3"/></svg><span>今日の執筆</span></button>
+      <button class="btn" id="start"><svg class="ui-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M30 5l5 4-15 24-6-5z"/><path d="M14 28c-9 2-1 9-9 12 10 0 16-3 15-9"/><path d="M25 13l5 3"/></svg><span>執筆開始</span></button>
       <p class="info" id="dueinfo"></p>
     </div>
-    <div class="foot">
+    <details class="archive-tools"><summary>記録と設定</summary><div class="foot">
       <div id="ver"></div>
       <button class="link" id="resetall">学習の記録をリセット</button>
       <button class="link" id="backup">記録のバックアップ／引っこし</button>
@@ -562,7 +626,7 @@ body>.wrap{max-width:860px;width:calc(100% - 80px);margin:28px auto;padding:26px
         <p id="logmsg"></p>
       </div>
       <p class="credit">漢字の字形は <a href="https://kanjivg.tagaini.net/" target="_blank" rel="noopener">KanjiVG</a>（CC BY-SA 3.0）のデータで表示しています。</p>
-    </div>
+    </div></details>
   </section>
 
   <section id="play" class="hide">
@@ -829,9 +893,13 @@ body>.wrap{max-width:860px;width:calc(100% - 80px);margin:28px auto;padding:26px
     ['moon','三日月の幻','夏目漱石『夢十夜』'],
     ['rose','秘密の薔薇','サン＝テグジュペリ『星の王子さま』'],
     ['raven','夜を告げる大鴉','エドガー・アラン・ポー『大鴉』'],
-    ['book','頁喰いの古書','古書と書斎をモチーフにした創作']
+    ['book','頁喰いの古書','古書と書斎をモチーフにした創作'],
+    ["wildcat", "注文の多い山猫", "宮沢賢治『注文の多い料理店』"],
+    ["fox", "月夜のごん狐", "新美南吉『ごん狐』"],
+    ["lemon", "檸檬の幻", "梶井基次郎『檸檬』"],
+    ["bottle", "瓶詰めの夢", "夢野久作『瓶詰地獄』"]
   ];
-  var ENEMY_ART = {"gate": "assets/enemies/gate.webp", "tiger": "assets/enemies/tiger.webp", "train": "assets/enemies/train.webp", "spider": "assets/enemies/spider.webp", "moon": "assets/enemies/moon.webp", "rose": "assets/enemies/rose.webp", "raven": "assets/enemies/raven.webp", "book": "assets/enemies/book.webp"};
+  var ENEMY_ART = {"gate": "assets/enemies/gate.webp", "tiger": "assets/enemies/tiger.webp", "train": "assets/enemies/train.webp", "spider": "assets/enemies/spider.webp", "moon": "assets/enemies/moon.webp", "rose": "assets/enemies/rose.webp", "raven": "assets/enemies/raven.webp", "book": "assets/enemies/book.webp", "wildcat": "assets/enemies/wildcat.webp", "fox": "assets/enemies/fox.webp", "lemon": "assets/enemies/lemon.webp", "bottle": "assets/enemies/bottle.webp"};
   var E = null;
   function newEnemy(n){ var m = pick(MONSTERS), hp = Math.max(20, Math.round(n * 14)); E = {i:m[0], n:m[1], source:m[2], hp: hp, max: hp, dead:false}; drawEnemy(); }
   function drawEnemy(){
@@ -1559,6 +1627,7 @@ body>.wrap{max-width:860px;width:calc(100% - 80px);margin:28px auto;padding:26px
 
   function hud(){
     var l = lvOf(P.xp);
+    $('opening-record').textContent = 'レベル ' + l.lv + '　・　仲間 ' + allyIds().length + '人';
     $('lvH').textContent = 'レベル ' + l.lv;
     $('lvH').className = 'lv t' + Math.min(Math.floor((l.lv - 1) / 10), 7);
     $('ptH').textContent = P.xp + 'pt(つぎまで' + l.rest + ')' + (P.streak > 1 ? '・' + P.streak + '日れんぞく' : '');
@@ -1998,7 +2067,14 @@ body>.wrap{max-width:860px;width:calc(100% - 80px);margin:28px auto;padding:26px
   // ===== 出題 =====
   var queue = [], pos = 0, first = 0, init = 0, right = 0, wrongs = [], combo = 0, gainedTotal = 0, busy = false, last = null, gotTickets = 0;
   function shuffle(a){ a = a.slice(); for (var i = a.length-1; i > 0; i--){ var j = Math.floor(Math.random()*(i+1)), t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
-  function show(id){ ['home','play','result'].forEach(function(s){ $(s).classList.toggle('hide', s !== id); }); window.scrollTo(0,0); }
+  function show(id){
+    ['opening','home','play','result'].forEach(function(s){ $(s).classList.toggle('hide', s !== id); });
+    $('app').classList.toggle('hide', id === 'opening');
+    document.body.dataset.screen = id;
+    window.scrollTo(0,0);
+  }
+  $('continue-writing').onclick = function(){ buildHome(); show('home'); $('titleback').focus({preventScroll:true}); };
+  $('titleback').onclick = function(){ show('opening'); $('continue-writing').focus({preventScroll:true}); };
 
   function begin(){
     var pool = shuffle(dueFor(mode, kind));
