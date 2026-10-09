@@ -333,6 +333,120 @@ h1{font-size:26px;font-weight:900;margin:8px 0 4px}
 .skill .author-label,.spark .author-label{justify-content:center}
 .combo-motifs{display:flex;justify-content:center;gap:6px;margin-bottom:5px}
 @media(max-width:480px){.scoutcard .author-motif{width:64px;height:64px}.author-label{gap:7px}}
+
+/* ===== 文学の書斎：表示・装飾のみ ===== */
+:root{
+  --bg:#e8e0d1;--card:#fcf8ef;--ink:#302e2a;--sub:#706555;--line:#c9bda6;--soft:#eee5d5;--ctx:#f2ebdd;
+  --primary:#793b43;--primary-ink:#fffaf0;--his:#793b43;--geo:#486368;--tag-ink:#fffaf0;
+  --ok:#456657;--ng:#9c443c;--ng-ink:#fffaf0;--shape:#b38b46;--mark:#9c443c;
+  --gold:#96733c;--paper-shadow:rgba(67,47,28,.09);--shelf:#ded3bf;
+  --serif:"Klee One","Hiragino Mincho ProN","Yu Mincho",serif;
+}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#242624;--card:#30332e;--ink:#eee5d3;--sub:#c1b6a3;--line:#676550;--soft:#3e4138;--ctx:#383b33;
+  --primary:#bd8990;--primary-ink:#251d20;--his:#975a65;--geo:#56757a;--tag-ink:#fffaf0;
+  --ok:#527a63;--ng:#a14e45;--ng-ink:#fffaf0;--shape:#c4a365;--mark:#e28f80;
+  --gold:#c4a365;--paper-shadow:rgba(0,0,0,.18);--shelf:#33372f;
+}}
+:root[data-theme="dark"]{
+  --bg:#242624;--card:#30332e;--ink:#eee5d3;--sub:#c1b6a3;--line:#676550;--soft:#3e4138;--ctx:#383b33;
+  --primary:#bd8990;--primary-ink:#251d20;--his:#975a65;--geo:#56757a;--tag-ink:#fffaf0;
+  --ok:#527a63;--ng:#a14e45;--ng-ink:#fffaf0;--shape:#c4a365;--mark:#e28f80;
+  --gold:#c4a365;--paper-shadow:rgba(0,0,0,.18);--shelf:#33372f;
+}
+body{background-image:radial-gradient(rgba(120,103,73,.05) .65px,transparent .65px);background-size:5px 5px;font-family:"Hiragino Sans","Yu Gothic",Meiryo,sans-serif;font-weight:500}
+button,textarea{font-family:inherit}
+.wrap{max-width:860px;padding:28px 26px 48px}
+.hud{font-size:13px;margin-bottom:20px;padding-bottom:12px;border-bottom:1px solid var(--line)}
+.hud .lv{border:1px solid var(--line);border-radius:3px;background:var(--card);color:var(--ink);text-shadow:none;padding:5px 12px;font-size:13px}
+.hud .pt{font-size:13px;color:var(--sub)}
+.mute{border-width:1px;border-radius:4px;font-size:16px}
+.book-cover{display:grid;grid-template-columns:1fr 215px;gap:20px;align-items:center;padding:20px 0 28px;border-bottom:3px double var(--line);margin-bottom:24px}
+.book-kicker{display:flex;align-items:center;gap:12px;font-size:11px;letter-spacing:.2em;color:var(--primary);margin:0 0 14px}
+.book-kicker::before{content:"文";display:inline-grid;place-items:center;width:29px;height:33px;border:1px solid var(--primary);font-family:var(--serif);font-size:18px;letter-spacing:0}
+h1{font-family:var(--serif);font-size:clamp(36px,6vw,52px);font-weight:600;letter-spacing:.12em;line-height:1.4;margin:0 0 12px}
+h1 span{display:block;font-size:16px;letter-spacing:.3em;margin-top:5px;color:var(--sub)}
+.book-cover .lead{font-family:var(--serif);font-size:16px;line-height:1.9;color:var(--ink);margin:0}
+.cover-art{position:relative;text-align:center;align-self:stretch;display:flex;flex-direction:column;justify-content:center;margin:0;min-width:0}
+.cover-art::before{content:"";position:absolute;inset:4px 20px 25px;border:1px solid var(--line);border-radius:50% 50% 3px 3px;z-index:-1;background:var(--ctx)}
+.cover-motifs{display:flex;align-items:flex-end;justify-content:center;gap:0;min-height:120px}
+.cover-motifs img{width:98px;height:110px;filter:drop-shadow(0 5px 2px var(--paper-shadow));margin:0 -18px}
+.cover-motifs img:nth-child(2){width:128px;height:140px;z-index:1}
+.cover-art figcaption{font-family:var(--serif);font-size:11px;letter-spacing:.15em;color:var(--sub);margin-top:10px}
+.jobbar{border-width:1px;border-radius:5px;padding:14px 16px;background:var(--card);box-shadow:0 3px 0 var(--paper-shadow);gap:14px;margin-bottom:18px}
+.jobbar .jgo{font-family:var(--serif);white-space:nowrap;color:var(--primary)}
+.jobbar .jicon{font-family:var(--serif);color:var(--gold)}
+.jobbar .jtxt{min-width:0}.jobbar small{line-height:1.7;overflow-wrap:anywhere}
+.jobbar.alert{border-color:var(--gold);box-shadow:inset 3px 0 var(--gold),0 3px 0 var(--paper-shadow)}
+.reading-note{font-size:13px;color:var(--sub);line-height:1.9;margin:0 0 14px}
+.tip{font-size:12px;font-weight:500;border-radius:0;border-left:2px solid var(--gold);background:transparent;padding:2px 12px;margin-bottom:22px}
+.tip b{font-size:inherit;color:var(--ink)}
+.panel{border-width:1px;border-radius:5px;padding:26px;background:var(--card);box-shadow:3px 3px 0 var(--bg),4px 4px 0 var(--line),8px 12px 25px var(--paper-shadow)}
+.panel h2{font-family:var(--serif);color:var(--ink);font-size:15px;letter-spacing:.08em;font-weight:600;margin-bottom:12px}
+.chapter-no{font-family:Georgia,serif;color:var(--gold);font-size:13px;margin-right:10px;letter-spacing:0}
+.chips{gap:8px;margin-bottom:24px}
+.chip{border-width:1px;border-radius:3px;font-size:14px;padding:10px 14px;font-weight:600;background:transparent;transition:background .15s,border-color .15s}
+.chip[aria-pressed="true"]{box-shadow:inset 0 -3px rgba(0,0,0,.12)}
+.chip small{font-size:11px;margin-top:2px;line-height:1.5}
+.btn{border:1px solid transparent;border-radius:4px;font-size:16px;font-weight:700;letter-spacing:.06em;box-shadow:0 2px 0 var(--paper-shadow)}
+.btn.ghost{background:var(--soft);border-color:var(--line)}
+#start{font-family:var(--serif);font-size:20px;letter-spacing:.2em;min-height:60px}
+.info{font-size:12px;line-height:1.8}.foot{border-top:1px solid var(--line);padding-top:18px;margin-top:30px;line-height:1.9}
+.foot::before{content:"一字ずつ、一頁ずつ。";display:block;font-family:var(--serif);font-size:14px;letter-spacing:.2em;color:var(--ink);margin-bottom:12px}
+.foot .link{font-size:11px}.link{color:var(--sub);text-underline-offset:4px;min-height:44px}
+.credit{opacity:.85}.tag{border-radius:2px;font-size:12px;padding:3px 9px;font-weight:600}
+.tag.yomi{background:var(--geo)}.tag.chi{background:#52634e}.tag.goi{background:#746078}
+.q,.wread{font-family:var(--serif);font-weight:600;line-height:1.9}.q{margin:22px 0 26px}.q.big{font-size:34px}
+.target,.ans .a{font-family:var(--serif)}.ctx,.note{border-radius:3px}.ans{border-top:1px solid var(--line)}
+#play .panel{padding:24px}.bar{height:3px;border-radius:0;margin:14px 0 24px}
+.rank .on{color:var(--gold)}.rank .off{color:var(--line)}
+.combo,.lvup,.yay .up{color:var(--gold)}.undo .link{color:var(--ng)}
+.enemy{display:grid;grid-template-columns:88px minmax(0,1fr) auto;gap:4px 16px;background:var(--card);border:1px solid var(--line);border-radius:4px;padding:14px 18px;margin:0 0 14px;position:relative}
+.enemy .eicon{grid-row:1/5;display:flex;align-items:center;justify-content:center;align-self:center}
+.enemy .eicon img{width:88px;height:88px;object-fit:contain;filter:drop-shadow(0 3px 1px var(--paper-shadow))}
+.enemy .encaption{grid-column:2/-1;font-family:var(--serif);font-size:10px;letter-spacing:.2em;color:var(--gold)}
+.enemy .ename{grid-column:2/-1;color:var(--ink);font-family:var(--serif);font-size:20px;line-height:1.4}
+.enemy .esource{grid-column:2/-1;font-size:11px;color:var(--sub);font-weight:500;overflow-wrap:anywhere}
+.enemy .ehp{grid-column:2;height:5px;border-radius:0;align-self:center}.enemy .ehp i{background:var(--primary)}
+.enemy .ehpn{grid-column:3;font-size:11px;font-variant-numeric:tabular-nums}
+.enemy.dead .eicon{transform:none;filter:grayscale(1);opacity:.35}
+.enemy.dead .ename::after{content:"　読了";font-size:11px;color:var(--ok)}
+.choice{border-width:1px;border-radius:3px;font-size:16px;padding:16px;font-weight:600}
+.choice:hover:not(:disabled){border-color:var(--primary);background:var(--ctx)}
+#pad{border-width:1px;border-radius:3px}.cmpbox,.glyph-box{border-radius:3px}.tool{border-width:1px;border-radius:3px}
+#jobs{background-image:radial-gradient(rgba(120,103,73,.05) .65px,transparent .65px);background-size:5px 5px}
+#jobs>.wrap>.meta{border-bottom:3px double var(--line);padding-bottom:16px;margin-bottom:20px;gap:12px;font-family:var(--serif);font-size:21px;color:var(--ink)}
+.tabs{gap:0;border-bottom:1px solid var(--line);margin-bottom:24px}.tabbtn{border:0;border-bottom:3px solid transparent;border-radius:0;background:transparent;font-size:13px;padding:12px 16px}
+.tabbtn.on{background:transparent;color:var(--primary);border-color:var(--primary)}
+.bungo.inparty{border:1px solid var(--line);border-left:3px solid var(--gold);border-radius:3px;padding:14px}
+.tier h3,.tier h4,.author-label,.work b,.genre b,.scoutcard b{font-family:var(--serif);font-weight:600}
+.ptbtn{border-width:1px;border-radius:3px;font-size:12px}.pmember{border:1px solid var(--line);border-top:3px solid var(--primary);border-radius:3px;background:var(--card)}
+.work,.genre,.scoutcard{border-width:1px;border-radius:3px;padding:16px;background:var(--card)}
+.work.got{background:var(--ctx);border-color:var(--gold)}.work small{line-height:1.8}
+.wgrid{gap:12px}.partyrow{gap:12px}.scoutcard{border-color:var(--gold)}
+.scoutcard.sel{border-color:var(--primary);box-shadow:inset 3px 0 var(--primary)}
+.jobclear{border:1px solid var(--gold);border-radius:3px}.uf,.stamp .msg2{border-radius:3px}
+.scrim{background:rgba(24,27,25,.85)}.skill .stag,.spark .sptag{background:#c3a465;color:#282820;border-radius:2px;letter-spacing:.1em}
+.skill .swho,.spark .spname,#fx.dim .yay .sub{color:#ead7ab}.spark .spname{text-shadow:0 2px 12px #191d19}
+.ring{border-color:#c3a465!important}.dmg.crit{color:#ead7ab}.stamp .kanji{color:#94443e;border-color:#94443e;border-radius:6px;background:#fcf8ef}
+.glyph,.multi{font-family:"Yuji Syuku",var(--serif)}
+.stamp .yomi{color:var(--ng)}.act,.ouch{border-radius:3px}.ouch{background:var(--ng)}
+button:focus-visible,a:focus-visible,textarea:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
+@media(hover:hover){.chip:not(:disabled):hover,.tool:hover,.ptbtn:not(.on):hover{border-color:var(--primary);background:var(--ctx)}.btn:not(:disabled):hover{filter:brightness(1.08)}}
+@media(max-width:560px){
+  .wrap{padding:16px 16px 36px}.hud{gap:6px;margin-bottom:12px}.hud .pt{font-size:11px}
+  .book-cover{grid-template-columns:1fr 115px;gap:4px;padding:12px 0 22px;margin-bottom:18px}
+  .book-kicker{font-size:9px;letter-spacing:.08em;gap:7px;margin-bottom:10px}.book-kicker::before{width:23px;height:27px;font-size:15px}
+  h1{font-size:38px;letter-spacing:.07em}h1 span{font-size:13px}.book-cover .lead{font-size:13px}
+  .cover-art{margin:0}.cover-art::before{inset:4px 2px 25px}.cover-motifs{min-height:100px}.cover-motifs img{width:53px;height:65px;margin:0 -13px}.cover-motifs img:nth-child(2){width:86px;height:110px}.cover-art figcaption{font-size:9px;letter-spacing:0}
+  .jobbar{padding:12px;gap:8px;flex-wrap:wrap}.jobbar .jtxt{flex-basis:calc(100% - 60px)}.jobbar .jgo{margin-left:auto;font-size:12px}.jobbar small{font-size:11px}
+  .panel,#play .panel{padding:18px 14px}.chip{padding:9px 11px;font-size:13px}.chips{gap:7px;margin-bottom:20px}
+  .enemy{grid-template-columns:64px minmax(0,1fr) auto;padding:12px;gap:4px 10px}.enemy .eicon img{width:64px;height:72px}.enemy .ename{font-size:18px}
+  .rank{font-size:15px}.rank small{font-size:10px}.unit{font-size:11px}.tabbtn{padding:12px 10px;font-size:12px}
+  .bhead{gap:8px}.row.three .btn{font-size:14px}.q{font-size:20px}.wread{font-size:21px;min-width:0}
+}
+@media(prefers-reduced-motion:reduce){.enemy.hit .eicon{animation:none}.enemy .ehp i,.chip,.choice{transition:none}}
+
 </style>
 </head>
 <body>
@@ -340,18 +454,21 @@ h1{font-size:26px;font-weight:900;margin:8px 0 4px}
 
   <section id="home">
     <div class="hud"><span class="lv" id="lvH"></span><span class="pt" id="ptH"></span><button class="mute" id="mute" type="button" aria-label="音のオンオフ">🔊</button></div>
+    <header class="book-cover">
+      <div><p class="book-kicker">文豪たちと、ことばの旅へ</p><h1>国語<span>一問一答</span></h1><p class="lead">ことばを集め、物語をひらく。<br>今日も、書斎の一頁から。</p></div>
+      <figure class="cover-art"><div class="cover-motifs" id="covermotifs" aria-hidden="true"></div><figcaption>ことばの書斎</figcaption></figure>
+    </header>
     <button class="jobbar" id="jobbtn" type="button"><span class="jicon" id="jicon"></span><span class="jtxt"><b id="jname"></b><small id="jprog"></small></span><span class="jgo">仲間と技 ›</span></button>
-    <h1>国語 一問一答</h1>
-    <p class="lead">漢字の書きは画面に大きく書いてから答えを見る。読みは頭の中で答えてから、知識と語彙は四つの中から答えを選ぼう。</p>
+    <p class="reading-note">漢字の書きは画面に大きく書いてから答えを見る。読みは頭の中で答えてから、知識と語彙は四つの中から答えを選ぼう。</p>
     <p class="tip">漢字の書きは、<b>他の問題より多くのポイント</b>がもらえます。</p>
     <div class="panel">
-      <h2>どこから出す?</h2>
+      <h2><span class="chapter-no" aria-hidden="true">I</span>どこから出す？</h2>
       <div class="chips" id="modes"></div>
-      <h2>なにを出す?</h2>
+      <h2><span class="chapter-no" aria-hidden="true">II</span>なにを出す？</h2>
       <div class="chips" id="kinds"></div>
-      <h2>問題の数</h2>
+      <h2><span class="chapter-no" aria-hidden="true">III</span>問題の数</h2>
       <div class="chips" id="counts"></div>
-      <button class="btn" id="start">スタート</button>
+      <button class="btn" id="start">書斎で学びはじめる</button>
       <p class="info" id="dueinfo"></p>
     </div>
     <div class="foot">
@@ -379,7 +496,7 @@ h1{font-size:26px;font-weight:900;margin:8px 0 4px}
 
   <section id="play" class="hide">
     <div class="meta"><span id="pos"></span><span class="combo" id="combo"></span><button class="link" id="quit">やめる</button></div>
-    <div class="enemy" id="enemy"><span class="eicon" id="eicon"></span><span class="ename" id="ename"></span><span class="ehp"><i id="ehp"></i></span><span class="ehpn" id="ehpn"></span></div>
+    <div class="enemy" id="enemy"><span class="eicon" id="eicon" aria-hidden="true"></span><span class="encaption">物語から現れた影</span><span class="ename" id="ename"></span><span class="esource" id="esource"></span><span class="ehp"><i id="ehp"></i></span><span class="ehpn" id="ehpn"></span></div>
     <div class="undo"><button class="link hide" id="undo" type="button">← 押しまちがえた(ひとつ前にもどる)</button></div>
     <div class="bar"><i id="prog"></i></div>
     <div class="panel" id="card">
@@ -440,7 +557,7 @@ h1{font-size:26px;font-weight:900;margin:8px 0 4px}
 
   <section id="result" class="hide">
     <div class="panel">
-      <h2>けっか</h2>
+      <h2>本日の学習帖</h2>
       <div class="score"><span id="sc"></span><small> / <span id="tot"></span></small></div>
       <p class="msg" id="rmsg"></p>
       <p class="lvup" id="rpt"></p>
@@ -571,20 +688,20 @@ h1{font-size:26px;font-weight:900;margin:8px 0 4px}
 
   // ===== 演出 =====
   var fx = $('fx');
-  var COLORS = ['#1a5fd8','#f2ab45','#1b8a5a','#e04f8a','#8a5cf0','#13b5c9'];
+  var COLORS = ['#793b43','#c4a365','#456657','#eee0bb','#746078','#486368'];
   var PRAISE = ['正解!','やったね!','すごい!','ナイス!','その調子!','バッチリ!'];
   var CHEER = [['挑','ちょうせん'],['粘','ねばり'],['進','すすめ'],['力','ちから'],['勇','ゆうき'],['闘','ファイト'],['覚','おぼえよう'],['伸','のびしろ']];
   var CHEERMSG = ['次はがんばれ!','ここで覚えれば強くなる!','まちがいはチャンス!','あきらめないで!','次は取れる!'];
   function pick(a){ return a[Math.floor(Math.random()*a.length)]; }
   function clearFx(){ fx.innerHTML = ''; fx.classList.remove('dim'); }
   var ACT = {
-    stick:[['🪵','swing'],'ひのきの棒でたたいた!'], slash:[['🗡️','swing'],'斬撃!'], magicslash:[['🔥','swing'],'炎の剣!'],
-    magic:[['🔥','glyph'],'炎の魔法!'], heal:[['✨','ring'],'いやしの光!'], steal:[['💨','multi'],'すばやい一撃!'],
-    punch:[['👊','multi'],'れんぞくパンチ!'], arrow:[['🏹','glyph'],'矢を放った!'], dragon:[['🐉','glyph'],'ジャンプ攻撃!'],
-    ninja:[['✴️','multi'],'手裏剣の連打!'], sing:[['🎶','ring'],'勇気の歌!'], coin:[['🪙','multi'],'お金を投げた!'],
-    dance:[['💃','multi'],'ふしぎな踊り!'], holy:[['🛡️','ring'],'聖なる光!'], dark:[['🌑','swing'],'闇の剣!'],
-    time:[['⏳','ring'],'時をとめた!'], summon:[['🐲','glyph'],'幻獣を召喚!'], beast:[['🐺','multi'],'魔物のかみつき!'],
-    fool:[['🎲','multi'],'でたらめ攻撃!'], pirate:[['💣','glyph'],'大砲発射!'], samurai:[['⚡','swing'],'居合い斬り!'], hero:[['🌈','ring'],'伝説の一撃!']
+    stick:[['筆','swing'],'一筆をしたためた！'], slash:[['一','swing'],'一閃の筆致！'], magicslash:[['焔','swing'],'焔の一節！'],
+    magic:[['灯','glyph'],'ことばに灯をともした！'], heal:[['光','ring'],'やさしい余韻！'], steal:[['風','multi'],'風を綴る！'],
+    punch:[['響','multi'],'響きあうことば！'], arrow:[['矢','glyph'],'一行が空を渡る！'], dragon:[['龍','glyph'],'物語の龍が舞う！'],
+    ninja:[['影','multi'],'行間を駆ける影！'], sing:[['詩','ring'],'詩をうたう！'], coin:[['金','multi'],'黄金のことば！'],
+    dance:[['舞','multi'],'文字が舞う！'], holy:[['聖','ring'],'祈りの一節！'], dark:[['夜','swing'],'夜を描く！'],
+    time:[['時','ring'],'時を紡ぐ！'], summon:[['幻','glyph'],'幻の物語！'], beast:[['獣','multi'],'獣の声が響く！'],
+    fool:[['夢','multi'],'夢のつづきを！'], pirate:[['波','glyph'],'海を渡る一節！'], samurai:[['閃','swing'],'一閃の筆致！'], hero:[['暁','ring'],'物語に暁を！']
   };
   function attackFx(job, dmg, crit){
     var a = ACT[job.fx] || ACT.stick;
@@ -632,12 +749,31 @@ h1{font-size:26px;font-weight:900;margin:8px 0 4px}
   }
 
   // ===== 敵(1回のセッションに1体) =====
-  var MONSTERS = [['👾','スライムもどき'],['🐗','あばれイノシシ'],['🦇','やみコウモリ'],['🐍','どくヘビ'],['👻','さまようぼうれい'],['🧟','ゾンビ'],['🐙','大ダコ'],['🦂','さばくのサソリ'],['🐉','ドラゴン'],['🦖','ティラノ'],['🧌','トロル'],['🦈','ジョーズ'],['👹','おに'],['🤖','からくり兵'],['🐲','りゅうおう']];
+  // 作品から着想した創作の敵。HP・報酬・抽選の仕組みは従来どおり。
+  var MONSTERS = [
+    ['gate','羅生門の影','芥川龍之介『羅生門』'],
+    ['tiger','山月の虎','中島敦『山月記』'],
+    ['train','銀河の迷い灯','宮沢賢治『銀河鉄道の夜』'],
+    ['spider','糸を紡ぐ影蜘蛛','芥川龍之介『蜘蛛の糸』'],
+    ['moon','三日月の幻','夏目漱石『夢十夜』'],
+    ['rose','秘密の薔薇','サン＝テグジュペリ『星の王子さま』'],
+    ['raven','夜を告げる大鴉','エドガー・アラン・ポー『大鴉』'],
+    ['book','頁喰いの古書','古書と書斎をモチーフにした創作']
+  ];
+  var ENEMY_ART = {"gate": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 120 120\"><g stroke=\"#273332\" stroke-width=\"3\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path fill=\"#793b43\" d=\"M21 41h78v8H21zM28 49h10v53H28zM82 49h10v53H82z\"/><path fill=\"#273332\" d=\"M12 39l18-8 10-15h40l10 15 18 8-7 8H19z\"/><path fill=\"#c4a365\" d=\"M33 31l10-11h34l10 11z\"/><path fill=\"#273332\" d=\"M44 99V66q16-22 32 0v33z\"/><path fill=\"#eee0bb\" d=\"M49 70l8-4-2 9zm22 0l-8-4 2 9z\"/><path d=\"M17 103h86M38 53h44\"/></g></svg>", "tiger": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 120 120\"><g stroke=\"#273332\" stroke-width=\"3\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path fill=\"#ba8d46\" d=\"M27 53L20 24l26 14q14-8 28 0l26-14-7 29q12 39-33 53Q15 92 27 53z\"/><path fill=\"#eee0bb\" d=\"M35 75q25-15 50 0l-5 17-20 10-20-10z\"/><path fill=\"#273332\" d=\"M48 39l12 21 12-21-12 7zM27 53l21 12-19-2zm66 0L72 65l19-2zM33 70l17 4-15 5zm54 0l-17 4 15 5zM52 80h16l-8 9z\"/><path d=\"M39 59l10 3m22 0 10-3M60 89v8M17 82l25 1m36 0 25-1\"/><path fill=\"#c4a365\" stroke=\"none\" d=\"M92 6l2 7 7 2-7 2-2 7-2-7-7-2 7-2z\"/></g></svg>", "train": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 120 120\"><g stroke=\"#273332\" stroke-width=\"3\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><circle cx=\"60\" cy=\"51\" r=\"40\" fill=\"#344a50\"/><path fill=\"#eee0bb\" d=\"M35 53h53v32H35z\"/><path fill=\"#793b43\" d=\"M30 48h63v9H30zM43 66h13v13H43zM65 66h13v13H65z\"/><path fill=\"#c4a365\" d=\"M33 83h59v8H33z\"/><circle cx=\"43\" cy=\"94\" r=\"7\" fill=\"#273332\"/><circle cx=\"79\" cy=\"94\" r=\"7\" fill=\"#273332\"/><path d=\"M21 105h82M40 43q-15-12 3-17m6 10q-5-13 9-15\" stroke=\"#eee0bb\"/><path fill=\"#eee0bb\" stroke=\"none\" d=\"M77 15l2 6 6 2-6 2-2 6-2-6-6-2 6-2zM25 24h3v3h-3zM92 40h3v3h-3z\"/></g></svg>", "spider": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 120 120\"><g stroke=\"#273332\" stroke-width=\"3\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M60 9v29M43 54L22 37 9 51m34 13L18 59 8 75m37-1L25 84l-3 20m55-50 21-17 13 14M77 64l25-5 10 16M75 74l20 10 3 20\"/><ellipse cx=\"60\" cy=\"73\" rx=\"24\" ry=\"27\" fill=\"#344a50\"/><circle cx=\"60\" cy=\"47\" r=\"16\" fill=\"#793b43\"/><path fill=\"#c4a365\" stroke=\"none\" d=\"M49 43h6v6h-6zm16 0h6v6h-6z\"/><path d=\"M60 59v34m-12-14 12 14 12-14\" stroke=\"#c4a365\"/></g></svg>", "moon": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 120 120\"><g stroke=\"#273332\" stroke-width=\"3\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path fill=\"#c4a365\" d=\"M91 21q-17-4-30 10t-9 34q5 21 28 26Q43 108 24 76T39 22q25-18 52-1z\"/><path fill=\"#344a50\" d=\"M77 60q20-5 25 11l-4 25H64L60 77q0-13 17-17z\"/><path fill=\"#eee0bb\" d=\"M69 70l8 4-7 4zm24 0l-8 4 7 4z\"/><path d=\"M60 98h41M78 44V28m-6 11h12\"/><path fill=\"#793b43\" d=\"M76 27l5-8 5 8-5 7z\"/></g></svg>", "rose": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 120 120\"><g stroke=\"#273332\" stroke-width=\"3\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M58 104V57m0 28q-23 0-29-18 23-4 29 18zm0 10q25-2 31-20-26-3-31 20z\" fill=\"#456657\"/><path fill=\"#793b43\" d=\"M60 19q17-10 24 5 21 0 18 19 9 15-9 25-4 19-25 13-20 13-32-6-20 1-21-19-13-14 5-27 4-20 24-15z\"/><path d=\"M44 35q20-16 34 1 17 13 0 29-22 17-38-2-13-13 4-28zm6 11q13-9 22 2 5 15-10 16-14-2-12-18z\" stroke=\"#c4a365\"/></g></svg>", "raven": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 120 120\"><g stroke=\"#273332\" stroke-width=\"3\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path fill=\"#344a50\" d=\"M25 86q-2-29 28-40-9-21 12-27 21-2 25 16l17 10-20 5q-2 27-27 38l-31 15 6-15z\"/><path fill=\"#273332\" d=\"M52 54q-27 17-32 35l35-9 18-23z\"/><path d=\"M50 88l-4 16m19-19-2 19M24 105h65\"/><circle cx=\"75\" cy=\"32\" r=\"3\" fill=\"#c4a365\" stroke=\"none\"/><path d=\"M34 79l20-12\" stroke=\"#c4a365\"/><path fill=\"#c4a365\" stroke=\"none\" d=\"M25 17l2 7 7 2-7 2-2 7-2-7-7-2 7-2z\"/></g></svg>", "book": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 120 120\"><g stroke=\"#273332\" stroke-width=\"3\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path fill=\"#793b43\" d=\"M17 28q23-6 43 7 21-13 43-7v67q-24-6-43 7-19-13-43-7z\"/><path fill=\"#eee0bb\" d=\"M23 20q20-5 37 9 18-14 37-9v66q-20-2-37 10-17-12-37-10z\"/><path d=\"M60 29v67m-30-58 21 6m-21 6 21 6m-21 6 21 6m18-24 21-6m-21 18 21-6m-21 18 21-6\"/><path fill=\"#273332\" d=\"M44 69q16-12 32 0l-3 13-13-7-13 7z\"/></g></svg>"};
   var E = null;
-  function newEnemy(n){ var m = pick(MONSTERS), hp = Math.max(20, Math.round(n * 14)); E = {i:m[0], n:m[1], hp: hp, max: hp, dead:false}; drawEnemy(); }
+  function newEnemy(n){ var m = pick(MONSTERS), hp = Math.max(20, Math.round(n * 14)); E = {i:m[0], n:m[1], source:m[2], hp: hp, max: hp, dead:false}; drawEnemy(); }
   function drawEnemy(){
     if (!E) return;
-    $('eicon').textContent = E.i; $('ename').textContent = E.n;
+    var icon = $('eicon');
+    if (icon.getAttribute('data-motif') !== E.i){
+      icon.textContent = '';
+      var img = document.createElement('img'); img.alt = ''; img.width = 88; img.height = 88;
+      img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(ENEMY_ART[E.i]);
+      icon.appendChild(img); icon.setAttribute('data-motif', E.i);
+    }
+    $('ename').textContent = E.n;
+    $('esource').textContent = '着想：' + E.source;
     $('ehp').style.width = Math.max(0, E.hp / E.max * 100) + '%'; $('ehpn').textContent = Math.max(0, E.hp) + '/' + E.max;
     $('enemy').classList.toggle('dead', E.dead);
   }
@@ -1222,7 +1358,7 @@ h1{font-size:26px;font-weight:900;margin:8px 0 4px}
   var COMBOS = DUOS.map(function(d){ return {k:d.k, n:d.n, t:d.t, m:d.m, r:3}; })
     .concat(TRIOS.map(function(d){ return {k:d.k, n:d.n, t:d.t, m:d.m, r:4}; }))
     .concat(SOLOS);
-  ACT.stick = [['📝','swing'], '原稿用紙でひっぱたいた!'];
+  ACT.stick = [['筆','swing'], 'ことばを綴った！'];
 
   // 招きの印をもらうレベル（全77枚。後半ほど間隔が開く）
   var MILE = (function(){
@@ -1341,7 +1477,7 @@ h1{font-size:26px;font-weight:900;margin:8px 0 4px}
     $('ptH').textContent = P.xp + 'pt(つぎまで' + l.rest + ')' + (P.streak > 1 ? '・' + P.streak + '日れんぞく' : '');
     $('mute').textContent = P.mute ? '🔇' : '🔊';
     var e = equipped(), n = allyIds().length, pt = party();
-    $('jicon').textContent = pt.length ? '' : '📚'; if (pt.length) $('jicon').appendChild(authorIcon(BMAP[pt[0]], 44));
+    $('jicon').textContent = pt.length ? '' : '蔵'; if (pt.length) $('jicon').appendChild(authorIcon(BMAP[pt[0]], 44));
     $('jname').textContent = pt.length ? pt.map(function(id){ return BMAP[id].n; }).join('・') :
       (n ? 'パーティがからっぽです' : 'まだ仲間がいません');
     var nm = nextMile(l.lv);
@@ -2032,6 +2168,9 @@ h1{font-size:26px;font-weight:900;margin:8px 0 4px}
     };
   };
 
+  ['akuta', 'soseki', 'kenji'].forEach(function(id){
+    if (BMAP[id]) $('covermotifs').appendChild(authorIcon(BMAP[id], 110));
+  });
   initParty();
   buildHome();
   window.__ichimon = { S: function(){ return S; }, P: function(){ return P; }, LOG: function(){ return LOG; }, WAIT: WAIT, DATA: DATA, CFG: CFG, KV: KV, lvOf: lvOf, showAnswer: showAnswer, BUNGO: BUNGO, GENRES: GENRES, COMBOS: COMBOS, WORK: WORK, openAllies: openAllies, learnTick: learnTick, learnedOf: learnedOf, party: party };
