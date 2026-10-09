@@ -572,6 +572,17 @@ body[data-screen="home"]>.wrap{background:none;border:0;box-shadow:none;max-widt
 @media(max-width:360px){#home h1{font-size:27px}#home .lead{font-size:10px}#home .hud{flex-wrap:wrap}#home .hud .pt{flex:1;font-size:10px}#home>.panel{padding:22px 12px}.opening-lead{font-size:12px}#opening-title{font-size:62px}}
 
 
+/* ===== パーティの顔ぶれ ===== */
+.jobbar .jicon.party{display:flex;gap:8px;flex:none;align-items:flex-start;font-family:inherit}
+.jobbar .pm{display:flex;flex-direction:column;align-items:center;width:78px;gap:4px}
+.jobbar .pm .author-motif{display:block;width:52px;height:52px;background:#ffffff10;border:1px solid #a58a5a88;border-radius:50%;padding:3px}
+.jobbar .pmn{font-family:var(--serif);font-size:10.5px;line-height:1.3;color:#e8d6b3;text-align:center;width:100%;overflow-wrap:anywhere;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+@media(max-width:600px){
+ .jobbar .jicon.party{flex-basis:100%;justify-content:space-around;gap:4px;padding-bottom:8px;border-bottom:1px solid #a58a5a44}
+ .jobbar .jicon.party~.jtxt{flex-basis:auto;flex:1}
+ .jobbar .pm{width:auto;flex:1;max-width:78px}
+}
+
 /* ===== デイリークエスト ===== */
 .quest{margin:0 0 22px;padding:16px 20px;background:linear-gradient(135deg,#342a21ed,#211b16f5);border:1px solid #a58a5a;border-radius:3px;box-shadow:inset 0 0 0 4px #211b16,inset 0 0 0 5px #8d744942,0 12px 30px #130d0855;color:#f2e8d2}
 .quest .qhead{display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap}
@@ -1725,11 +1736,18 @@ body[data-screen="home"]>.wrap{background:none;border:0;box-shadow:none;max-widt
     $('mute').textContent = ''; $('mute').appendChild(uiIcon(P.mute ? 'muted' : 'volume'));
     $('mute').setAttribute('aria-label', P.mute ? '音をオンにする' : '音をオフにする');
     var e = equipped(), n = allyIds().length, pt = party();
-    $('jicon').textContent = ''; $('jicon').appendChild(pt.length ? authorIcon(BMAP[pt[0]], 44) : uiIcon('books'));
-    $('jname').textContent = pt.length ? pt.map(function(id){ return BMAP[id].n; }).join('・') :
+    var ji = $('jicon'); ji.textContent = ''; ji.classList.toggle('party', pt.length > 0);
+    if (pt.length){
+      pt.forEach(function(id){
+        var b = BMAP[id], m = el('span', 'pm');
+        m.appendChild(authorIcon(b, 52)); m.appendChild(el('span', 'pmn', b.n));
+        ji.appendChild(m);
+      });
+    } else ji.appendChild(uiIcon('books'));
+    $('jname').textContent = pt.length ? 'パーティ ' + pt.length + '/' + PARTY_MAX + '人' :
       (n ? 'パーティがからっぽです' : 'まだ仲間がいません');
     var nm = nextMile(l.lv);
-    $('jprog').textContent = '仲間 ' + n + '/' + BUNGO.length + '人・パーティ ' + pt.length + '/4・技 ' + e.length + '・掛け合い ' + foundCount() + '/' + COMBOS.length +
+    $('jprog').textContent = '仲間 ' + n + '/' + BUNGO.length + '人・技 ' + e.length + '・掛け合い ' + foundCount() + '/' + COMBOS.length +
       (P.tickets ? '　招きの印 ' + P.tickets + 'まい!' : (nm ? '　つぎの印はレベル' + nm : ''));
     $('jobbtn').classList.toggle('alert', !!P.tickets);
   }
