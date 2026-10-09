@@ -509,6 +509,17 @@ body>.wrap{max-width:860px;width:calc(100% - 80px);margin:28px auto;padding:26px
 }
 @media(max-width:360px){.book-cover{grid-template-columns:minmax(0,1fr) 88px}.cover-motifs img{width:42px;margin:0 -12px}.cover-motifs img:nth-child(2){width:72px}.book-kicker::before{width:20px;height:24px}.book-kicker{font-size:7px}h1{font-size:32px}.book-cover .lead{font-size:11px}.book-cover .lead br{display:none}}
 
+
+/* 敵の挿絵：書斎の光と机になじませる表示 */
+.enemy .eicon{width:164px;height:164px;bottom:108px;isolation:isolate}
+.enemy .eicon img{width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 3px 2px rgba(34,22,13,.3));z-index:1}
+.enemy .eicon::before{inset:auto 12% 0;height:12px;border-radius:50%;background:rgba(33,23,14,.32);filter:blur(4px);z-index:0}
+.enemy .eicon[data-motif="moon"]::before,.enemy .eicon[data-motif="spider"]::before{opacity:.35}
+.enemy.hit .eicon{animation:literary-hit 400ms}
+@keyframes literary-hit{0%,100%{transform:translateX(-50%)}30%{transform:translateX(calc(-50% + 5px)) rotate(2deg)}65%{transform:translateX(calc(-50% - 3px)) rotate(-1deg)}}
+@media(max-width:600px){.enemy .eicon{width:132px;height:132px;bottom:104px}.enemy .eicon img{width:100%;height:100%}}
+@media(prefers-reduced-motion:reduce){.enemy.hit .eicon{animation:none}}
+
 </style>
 </head>
 <body>
@@ -820,7 +831,7 @@ body>.wrap{max-width:860px;width:calc(100% - 80px);margin:28px auto;padding:26px
     ['raven','夜を告げる大鴉','エドガー・アラン・ポー『大鴉』'],
     ['book','頁喰いの古書','古書と書斎をモチーフにした創作']
   ];
-  var ENEMY_ART = {"gate": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 120 120\"><g stroke=\"#273332\" stroke-width=\"3\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path fill=\"#793b43\" d=\"M21 41h78v8H21zM28 49h10v53H28zM82 49h10v53H82z\"/><path fill=\"#273332\" d=\"M12 39l18-8 10-15h40l10 15 18 8-7 8H19z\"/><path fill=\"#c4a365\" d=\"M33 31l10-11h34l10 11z\"/><path fill=\"#273332\" d=\"M44 99V66q16-22 32 0v33z\"/><path fill=\"#eee0bb\" d=\"M49 70l8-4-2 9zm22 0l-8-4 2 9z\"/><path d=\"M17 103h86M38 53h44\"/></g></svg>", "tiger": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 120 120\"><g stroke=\"#273332\" stroke-width=\"3\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path fill=\"#ba8d46\" d=\"M27 53L20 24l26 14q14-8 28 0l26-14-7 29q12 39-33 53Q15 92 27 53z\"/><path fill=\"#eee0bb\" d=\"M35 75q25-15 50 0l-5 17-20 10-20-10z\"/><path fill=\"#273332\" d=\"M48 39l12 21 12-21-12 7zM27 53l21 12-19-2zm66 0L72 65l19-2zM33 70l17 4-15 5zm54 0l-17 4 15 5zM52 80h16l-8 9z\"/><path d=\"M39 59l10 3m22 0 10-3M60 89v8M17 82l25 1m36 0 25-1\"/><path fill=\"#c4a365\" stroke=\"none\" d=\"M92 6l2 7 7 2-7 2-2 7-2-7-7-2 7-2z\"/></g></svg>", "train": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 120 120\"><g stroke=\"#273332\" stroke-width=\"3\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><circle cx=\"60\" cy=\"51\" r=\"40\" fill=\"#344a50\"/><path fill=\"#eee0bb\" d=\"M35 53h53v32H35z\"/><path fill=\"#793b43\" d=\"M30 48h63v9H30zM43 66h13v13H43zM65 66h13v13H65z\"/><path fill=\"#c4a365\" d=\"M33 83h59v8H33z\"/><circle cx=\"43\" cy=\"94\" r=\"7\" fill=\"#273332\"/><circle cx=\"79\" cy=\"94\" r=\"7\" fill=\"#273332\"/><path d=\"M21 105h82M40 43q-15-12 3-17m6 10q-5-13 9-15\" stroke=\"#eee0bb\"/><path fill=\"#eee0bb\" stroke=\"none\" d=\"M77 15l2 6 6 2-6 2-2 6-2-6-6-2 6-2zM25 24h3v3h-3zM92 40h3v3h-3z\"/></g></svg>", "spider": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 120 120\"><g stroke=\"#273332\" stroke-width=\"3\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M60 9v29M43 54L22 37 9 51m34 13L18 59 8 75m37-1L25 84l-3 20m55-50 21-17 13 14M77 64l25-5 10 16M75 74l20 10 3 20\"/><ellipse cx=\"60\" cy=\"73\" rx=\"24\" ry=\"27\" fill=\"#344a50\"/><circle cx=\"60\" cy=\"47\" r=\"16\" fill=\"#793b43\"/><path fill=\"#c4a365\" stroke=\"none\" d=\"M49 43h6v6h-6zm16 0h6v6h-6z\"/><path d=\"M60 59v34m-12-14 12 14 12-14\" stroke=\"#c4a365\"/></g></svg>", "moon": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 120 120\"><g stroke=\"#273332\" stroke-width=\"3\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path fill=\"#c4a365\" d=\"M91 21q-17-4-30 10t-9 34q5 21 28 26Q43 108 24 76T39 22q25-18 52-1z\"/><path fill=\"#344a50\" d=\"M77 60q20-5 25 11l-4 25H64L60 77q0-13 17-17z\"/><path fill=\"#eee0bb\" d=\"M69 70l8 4-7 4zm24 0l-8 4 7 4z\"/><path d=\"M60 98h41M78 44V28m-6 11h12\"/><path fill=\"#793b43\" d=\"M76 27l5-8 5 8-5 7z\"/></g></svg>", "rose": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 120 120\"><g stroke=\"#273332\" stroke-width=\"3\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M58 104V57m0 28q-23 0-29-18 23-4 29 18zm0 10q25-2 31-20-26-3-31 20z\" fill=\"#456657\"/><path fill=\"#793b43\" d=\"M60 19q17-10 24 5 21 0 18 19 9 15-9 25-4 19-25 13-20 13-32-6-20 1-21-19-13-14 5-27 4-20 24-15z\"/><path d=\"M44 35q20-16 34 1 17 13 0 29-22 17-38-2-13-13 4-28zm6 11q13-9 22 2 5 15-10 16-14-2-12-18z\" stroke=\"#c4a365\"/></g></svg>", "raven": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 120 120\"><g stroke=\"#273332\" stroke-width=\"3\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path fill=\"#344a50\" d=\"M25 86q-2-29 28-40-9-21 12-27 21-2 25 16l17 10-20 5q-2 27-27 38l-31 15 6-15z\"/><path fill=\"#273332\" d=\"M52 54q-27 17-32 35l35-9 18-23z\"/><path d=\"M50 88l-4 16m19-19-2 19M24 105h65\"/><circle cx=\"75\" cy=\"32\" r=\"3\" fill=\"#c4a365\" stroke=\"none\"/><path d=\"M34 79l20-12\" stroke=\"#c4a365\"/><path fill=\"#c4a365\" stroke=\"none\" d=\"M25 17l2 7 7 2-7 2-2 7-2-7-7-2 7-2z\"/></g></svg>", "book": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 120 120\"><g stroke=\"#273332\" stroke-width=\"3\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path fill=\"#793b43\" d=\"M17 28q23-6 43 7 21-13 43-7v67q-24-6-43 7-19-13-43-7z\"/><path fill=\"#eee0bb\" d=\"M23 20q20-5 37 9 18-14 37-9v66q-20-2-37 10-17-12-37-10z\"/><path d=\"M60 29v67m-30-58 21 6m-21 6 21 6m-21 6 21 6m18-24 21-6m-21 18 21-6m-21 18 21-6\"/><path fill=\"#273332\" d=\"M44 69q16-12 32 0l-3 13-13-7-13 7z\"/></g></svg>"};
+  var ENEMY_ART = {"gate": "assets/enemies/gate.webp", "tiger": "assets/enemies/tiger.webp", "train": "assets/enemies/train.webp", "spider": "assets/enemies/spider.webp", "moon": "assets/enemies/moon.webp", "rose": "assets/enemies/rose.webp", "raven": "assets/enemies/raven.webp", "book": "assets/enemies/book.webp"};
   var E = null;
   function newEnemy(n){ var m = pick(MONSTERS), hp = Math.max(20, Math.round(n * 14)); E = {i:m[0], n:m[1], source:m[2], hp: hp, max: hp, dead:false}; drawEnemy(); }
   function drawEnemy(){
@@ -828,8 +839,8 @@ body>.wrap{max-width:860px;width:calc(100% - 80px);margin:28px auto;padding:26px
     var icon = $('eicon');
     if (icon.getAttribute('data-motif') !== E.i){
       icon.textContent = '';
-      var img = document.createElement('img'); img.alt = ''; img.width = 88; img.height = 88;
-      img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(ENEMY_ART[E.i]);
+      var img = document.createElement('img'); img.alt = ''; img.width = 164; img.height = 164; img.decoding = 'async';
+      img.src = ENEMY_ART[E.i];
       icon.appendChild(img); icon.setAttribute('data-motif', E.i);
     }
     $('ename').textContent = E.n;
