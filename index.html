@@ -732,9 +732,10 @@ body[data-screen="home"]>.wrap{background:none;border:0;box-shadow:none;max-widt
   var NOTES = JSON.parse(document.getElementById('notes').textContent);
 
   // ===== 出題間隔(正解した回数＝ランク → 出題されない期間) =====
+  // 1回目の正解→3日後以降、2回目→10日後以降、3回目→1か月(30日)後以降、4回目以降→4か月(120日)後以降
   var HOUR = 3600e3, DAY = 24*HOUR;
-  var WAIT = [0, 12*HOUR, 24*HOUR, 7*DAY, 30*DAY, 90*DAY, 180*DAY];
-  var MAXL = 6;
+  var WAIT = [0, 3*DAY, 10*DAY, 30*DAY, 120*DAY];
+  var MAXL = 4;
 
   function $(id){ return document.getElementById(id); }
   function todayJST(){ return new Date(Date.now() + 9*HOUR).toISOString().slice(0,10); }
@@ -795,6 +796,14 @@ body[data-screen="home"]>.wrap{background:none;border:0;box-shadow:none;max-widt
   var S = load(KEY, {});
   var P = load(PKEY, {xp:0, mute:false, day:'', streak:0});
   var LOG = load(LKEY, []);
+  // 旧方式(ランク6段階)の記録を新方式(4段階)に合わせる
+  function fitS(){
+    var ch = false;
+    Object.keys(S).forEach(function(k){ var s = S[k];
+      if (s && s.l > MAXL){ s.l = MAXL; s.d = Math.min(s.d, Date.now() + WAIT[MAXL]); ch = true; } });
+    return ch;
+  }
+  if (fitS()) save(KEY, S);
   function saveS(){ save(KEY, S); }
   function saveP(){ save(PKEY, P); }
   function saveLog(){ if (LOG.length > 3000) LOG = LOG.slice(-3000); save(LKEY, LOG); }
@@ -2297,6 +2306,7 @@ body[data-screen="home"]>.wrap{background:none;border:0;box-shadow:none;max-widt
       var o = JSON.parse(b64d(v.slice(8)));
       var n = 0;
       Object.keys(o.S || {}).forEach(function(k){ var a = S[k], b = o.S[k]; if (!a || (b && (b.l > a.l || (b.l === a.l && b.d > a.d)))){ S[k] = b; n++; } });
+      fitS();
       if (o.P){ if ((o.P.xp || 0) > (P.xp || 0)){ P.xp = o.P.xp; P.party = o.P.party || P.party; P.tickets = o.P.tickets || P.tickets; }
         P.learned = Object.assign({}, o.P.learned || {}, P.learned || {});
         var oc = o.P.cnt || {}; P.cnt = P.cnt || {}; Object.keys(oc).forEach(function(k){ P.cnt[k] = Math.max(P.cnt[k] || 0, oc[k]); });
