@@ -432,10 +432,51 @@ h1{font-size:26px;font-weight:900;margin:8px 0 4px}
 .spk-claw{left:var(--x);top:20vh;width:16px;height:62vh;border-radius:50%;background:linear-gradient(180deg,transparent,#ff5a4a 20%,#fff 50%,#ff5a4a 80%,transparent);
   box-shadow:0 0 18px #ff3b2f;transform:rotate(24deg) scaleY(0);transform-origin:top;animation:spkclaw .35s ease-out var(--d) both}
 @keyframes spkclaw{0%{opacity:1;transform:rotate(24deg) scaleY(0)}100%{opacity:1;transform:rotate(24deg) scaleY(1)}}
+/* ===== 掛け合い全画面演出：二作(三作)の場面を斜めに割り、ぶつけて、朱の帯で関係を打ち込む ===== */
+.dk{position:absolute;inset:0;overflow:hidden;background:#000;animation:spkall var(--dur,4700ms) ease both;font-family:"Zen Maru Gothic",sans-serif;
+  --rb1:#7e1812;--rb2:#c8372b;--rg:#ffd77a}
+.dk.r4{--rb1:#3d1a73;--rb2:#8a4fd8;--rg:#ffe9a8}
+.dk.r5{--rb1:#7a4f08;--rb2:#e5a62a;--rg:#fff6c8}
+.dk.r4::after,.dk.r5::after{content:'';position:absolute;inset:7px;border:2px solid var(--rg);opacity:.75;pointer-events:none;box-shadow:inset 0 0 22px var(--rg)}
+.dk-in{position:absolute;inset:0}
+.dk.shk .dk-in{animation:spkshake .5s .9s}
+.dk-band{position:absolute;inset:0;clip-path:var(--cp);background:var(--bg);animation:dkwipe .5s cubic-bezier(.2,.8,.2,1) var(--wd,0s) both}
+@keyframes dkwipe{from{transform:var(--from)}to{transform:none}}
+.dk-top{position:absolute;inset:0}
+.dk-col{position:absolute;left:var(--cx);top:4%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:6px;width:max-content;max-width:48vw}
+.dk-col.nof{padding-top:calc(min(24vw,108px) + 30px)}
+.dk-face{animation:dkface .55s cubic-bezier(.2,1.5,.4,1) var(--fd,.25s) both}
+.dk-face .author-motif{width:min(24vw,108px);height:min(24vw,108px);filter:drop-shadow(0 0 14px var(--ac)) drop-shadow(0 0 4px #000)}
+.dk.solo .dk-face .author-motif{width:min(34vw,150px);height:min(34vw,150px)}
+@keyframes dkface{from{opacity:0;transform:translate(var(--sx),var(--sy)) scale(1.5)}to{opacity:1;transform:none}}
+.dk-name{font-size:min(3.8vw,15px);font-weight:900;color:#fff;letter-spacing:.1em;text-shadow:0 2px 8px #000;animation:spkup .4s ease .5s both}
+.dk-title{writing-mode:vertical-rl;font-family:"Yuji Syuku","Hiragino Mincho ProN",serif;font-weight:900;line-height:1.15;color:#fff;margin-top:6px;
+  text-shadow:0 0 22px var(--ac),0 0 8px var(--ac),0 3px 0 rgba(0,0,0,.6);animation:dktitle .6s cubic-bezier(.15,1.6,.35,1) var(--td,.6s) both}
+@keyframes dktitle{0%{opacity:0;transform:translateY(-30px) scale(2.2);filter:blur(8px)}60%{opacity:1;filter:none}100%{opacity:1;transform:none}}
+.dk-flash{position:absolute;inset:0;background:#fff;mix-blend-mode:screen;animation:spkflash .6s ease-out var(--d,.9s) both}
+.dk-rb{position:absolute;left:-10%;right:-10%;top:var(--rt,66%);text-align:center;padding:4px 0 9px;
+  background:linear-gradient(90deg,transparent,var(--rb1) 12%,var(--rb2) 50%,var(--rb1) 88%,transparent);
+  border-top:3px solid var(--rg);border-bottom:3px solid var(--rg);box-shadow:0 0 34px var(--rb2);
+  transform:translateY(-50%) rotate(-5deg);animation:dkrb .5s cubic-bezier(.2,1.8,.4,1) .9s both}
+@keyframes dkrb{0%{opacity:0;transform:translateY(-50%) rotate(-5deg) scale(3,2.2);filter:blur(8px)}100%{opacity:1;transform:translateY(-50%) rotate(-5deg);filter:none}}
+.dk-rb small{display:block;font-size:min(3.8vw,15px);font-weight:900;color:var(--rg);letter-spacing:.4em;text-shadow:0 2px 6px #000}
+.dk-rb b{display:block;font-family:"Yuji Syuku","Hiragino Mincho ProN",serif;color:#fff;letter-spacing:.1em;line-height:1.25;
+  text-shadow:0 3px 0 rgba(0,0,0,.55),0 0 18px var(--rg)}
+.dk-seal{position:absolute;right:4vw;top:70%;width:min(19vw,76px);height:min(19vw,76px);display:flex;align-items:center;justify-content:center;text-align:center;
+  font-family:"Yuji Syuku",serif;font-size:min(5.2vw,21px);line-height:1.15;color:#fff;background:#c1352a;border:3px double #fff;border-radius:6px;
+  box-shadow:0 0 0 2px #7e1812,0 6px 16px rgba(0,0,0,.6);transform:rotate(12deg);animation:dkseal .45s cubic-bezier(.3,1.6,.5,1) 1.6s both}
+@keyframes dkseal{0%{opacity:0;transform:rotate(12deg) scale(3.2)}70%{opacity:1;transform:rotate(12deg) scale(.9)}100%{opacity:1;transform:rotate(12deg)}}
+.dk-say{position:absolute;left:4vw;right:4vw;bottom:4vh;max-width:640px;margin:0 auto;padding:10px 16px 12px;background:rgba(14,9,4,.88);
+  border:2px solid var(--rg);border-radius:6px;box-shadow:0 0 0 3px rgba(0,0,0,.5),0 8px 30px rgba(0,0,0,.6);animation:spkup .45s ease 1.7s both}
+.dk-say .who{display:flex;justify-content:space-between;gap:10px;font-size:min(3.8vw,14px);font-weight:900;color:var(--rg);letter-spacing:.08em;margin-bottom:4px}
+.dk-say .who em{font-style:normal;color:#ffb09a;white-space:nowrap}
+.dk-say .txt{font-family:"Klee One","Hiragino Mincho ProN",serif;font-size:min(4.8vw,20px);font-weight:600;color:#fff;line-height:1.7}
+.dk-say .txt span{opacity:0;animation:skin .01s linear both}
+.dk-say .reg{margin-top:4px;font-size:min(3.4vw,12px);color:#ffd77a;font-weight:700}
 @media (prefers-reduced-motion: reduce){
-  .spk-fxl,.spk-flash,.spk-glyph{display:none}
-  .spk.shk .spk-in{animation:none}
-  .spk-tag,.spk-who,.spk-title,.spk-quote,.spk-note{animation:skin .4s ease both!important}
+  .spk-fxl,.spk-flash,.spk-glyph,.dk-flash,.dk-top{display:none}
+  .spk.shk .spk-in,.dk.shk .dk-in{animation:none}
+  .spk-tag,.spk-who,.spk-title,.spk-quote,.spk-note,.dk-band,.dk-face,.dk-name,.dk-title,.dk-rb,.dk-seal,.dk-say{animation:skin .4s ease both!important}
 }
 
 
@@ -2049,6 +2090,108 @@ body[data-screen="home"]>.wrap{background:none;border:0;box-shadow:none;max-widt
     setTimeout(function(){ tone([T[3][T[3].length - 1] * 2], 0.4, 'sine'); }, 1550);
     return SPARK_MS;
   }
+  // ===== 掛け合い全画面演出 =====
+  // 組み合わせた作品それぞれの閃きの場面（炎・海・夜・桜…）を斜めに割って並べ、
+  // 中央でぶつけたあと、関係の名前を朱の帯で打ち込み、台詞を一文字ずつ語らせる。
+  var DUO_REL = [
+    [/反目|論争|文体|決闘|恨み|魂の取引|負け惜しみ|笑えない|同じ宮中/, 'clash'],
+    [/師弟|親友|盟友|双璧|無頼派|蕉門|新感覚派|あこがれ|同じ年|友情|歩いて|歌う仲間|同じ作者|系譜|集結|三大随筆|日記文学|随筆|同じ書物/, 'bond']
+  ];
+  function duoFx(c, isNew, dmg){
+    var ws = c.k.map(function(k){ return WORK[k]; });
+    var n = ws.length, solo = c.r === 5, trio = !solo && n >= 3;
+    var tier = solo ? 'ひとり技' : trio ? '三重奏' : '掛け合い';
+    var rname = solo ? c.n.replace(/^ひとり技・/, '') : c.n;
+    var rel = 'echo';
+    if (!solo) for (var ri = 0; ri < DUO_REL.length; ri++) if (DUO_REL[ri][0].test(c.n)){ rel = DUO_REL[ri][1]; break; }
+    var vw = Math.min(window.innerWidth || 380, 900), vh = window.innerHeight || 700;
+    var MS = (solo || trio) ? 5300 : 4800, slant = 7;
+    var root = el('div', 'dk r' + c.r + (solo ? ' solo' : ''));
+    root.style.setProperty('--dur', MS + 'ms');
+    var inner = el('div', 'dk-in'); root.appendChild(inner);
+
+    // 1) 作品ごとの帯：その作品の閃きの背景と粒子をそのまま使う（組み合わせごとに画面の色と景色が変わる）
+    ws.forEach(function(w, i){
+      var T = SPKT[w.fx] || SPKT.stick;
+      var xl = i === 0 ? -20 : 100 * i / n, xr = i === n - 1 ? 120 : 100 * (i + 1) / n;
+      var band = el('div', 'dk-band');
+      band.style.setProperty('--cp', 'polygon(' + (xl + slant) + '% 0,' + (xr + slant) + '% 0,' + (xr - slant) + '% 100%,' + (xl - slant) + '% 100%)');
+      band.style.setProperty('--bg', T[1]); band.style.setProperty('--ac', T[2]);
+      band.style.setProperty('--from', i === 0 ? 'translate(-105%,0)' : i === n - 1 ? 'translate(105%,0)' : 'translate(0,-105%)');
+      band.style.setProperty('--wd', (i * 0.06) + 's');
+      var L = el('div', 'spk-fxl'); band.appendChild(L);
+      try { (SPKSCENE[T[0]] || SPKSCENE.slash)(L, root, T[2], 40, '『' + w.t + '』'); } catch(e){}
+
+      var col = el('div', 'dk-col' + (solo && i !== 1 ? ' nof' : ''));
+      col.style.setProperty('--cx', ((i + .5) * 100 / n) + '%');
+      if (!solo || i === 1){
+        var face = el('div', 'dk-face');
+        face.style.setProperty('--sx', i === 0 ? '-70vw' : i === n - 1 ? '70vw' : '0px');
+        face.style.setProperty('--sy', (i > 0 && i < n - 1) ? '-40vh' : '0px');
+        face.style.setProperty('--fd', (.2 + i * .08) + 's');
+        face.appendChild(authorIcon(w.b, solo ? 150 : 108)); col.appendChild(face);
+        col.appendChild(el('div', 'dk-name', w.b.n));
+      }
+      var t = '『' + w.t + '』', len = t.length, lines = len > 9 ? 2 : 1, per = Math.ceil(len / lines);
+      var fs = Math.max(18, Math.min(vw * (n >= 3 ? 0.085 : 0.11), 56, vh * 0.34 / per));
+      var h = el('div', 'dk-title', t); h.style.fontSize = fs + 'px'; h.style.maxHeight = (per * fs * 1.15 + 4) + 'px';
+      h.style.setProperty('--td', (.6 + i * .15) + 's');
+      col.appendChild(h); band.appendChild(col); inner.appendChild(band);
+    });
+
+    // 2) 境目の白い裂け目
+    var seam = '';
+    for (var s = 1; s < n; s++){ var x = 100 * s / n;
+      seam += '<line class="spk-draw" pathLength="100" x1="' + (x + slant) + '" y1="0" x2="' + (x - slant) + '" y2="100" stroke="#fff" stroke-width="1.1" style="--t:.5s;--d:.45s;filter:drop-shadow(0 0 6px #ffe9a8)"/>'; }
+    if (seam) spkSvg(inner, 'spk-svg dk-top', seam);
+
+    // 3) 関係の種類ごとの演出（反目＝斬り合い／結びつき＝金の糸／その他＝余韻）＋関係名の巨大な透かし
+    var X = el('div', 'spk-fxl dk-top'); inner.appendChild(X);
+    var wm = el('div', 'spk-glyph', rname.charAt(0)); wm.style.setProperty('--ac', '#fff'); X.appendChild(wm);
+    if (rel === 'clash'){
+      root.classList.add('shk');
+      [[-26, .95], [26, 1.05]].forEach(function(a){ spkPart(X, 'spk-sl', {a:a[0] + 'deg', y:'66%', d:a[1] + 's', c:'#ff6a4a', h:'12px'}); });
+      for (var i1 = 0; i1 < 26; i1++) spkPart(X, 'spk-rise', {x:rnd(0, 100) + '%', s:rnd(10, 24) + 'px', c:pick(['#ff6a4a', '#ffd27a', '#fff']),
+        t:rnd(1.4, 2.6) + 's', d:(.95 + rnd(0, 1.2)) + 's', dx:rnd(-60, 60) + 'px', r:rnd(-120, 120) + 'deg'}, '✦');
+    } else if (rel === 'bond'){
+      // 顔と顔のあいだを、金の糸で結ぶ
+      var ths = n >= 3 ? ['M29 10 C 33 2, 36 18, 40 10', 'M60 10 C 64 2, 67 18, 71 10'] : ['M38 10 C 44 1, 56 19, 62 10'], thSvg = '';
+      ths.forEach(function(th, ti){
+        thSvg += '<path class="spk-draw" pathLength="100" d="' + th + '" fill="none" stroke="#ffd77a" stroke-width="1.1" stroke-linecap="round" style="--t:.9s;--d:' + (.9 + ti * .15) + 's;filter:drop-shadow(0 0 5px #ffd77a)"/>' +
+          '<path class="spk-draw" pathLength="100" d="' + th + '" fill="none" stroke="#fff" stroke-width=".35" stroke-linecap="round" style="--t:.9s;--d:' + (1 + ti * .15) + 's"/>';
+      });
+      spkSvg(X, 'spk-svg dk-top', thSvg);
+      for (var i2 = 0; i2 < 18; i2++) spkPart(X, 'spk-rise', {x:rnd(10, 90) + '%', s:rnd(12, 26) + 'px', c:'#ffd77a',
+        t:rnd(2, 3.2) + 's', d:(1 + rnd(0, 1.4)) + 's', dx:rnd(-30, 30) + 'px', r:rnd(-60, 60) + 'deg'}, pick(['結', '✦', '✧']));
+    } else {
+      for (var i3 = 0; i3 < 14; i3++) spkPart(X, 'spk-tw', {x:rnd(0, 100) + '%', y:rnd(0, 100) + '%', d:rnd(.8, 2.4) + 's'});
+    }
+    if (solo || trio) spkPart(X, 'spk-rays', {rc:'rgba(255,230,150,.2)'});
+    [.9, 1.05, 1.25].forEach(function(d){ var wv = spkPart(X, 'spk-wave', {c:'#fff', d:d + 's'}); wv.style.top = '66%'; });
+
+    // 4) 朱の帯：関係の名前を打ち込む（新発見なら朱印も）
+    var rb = el('div', 'dk-rb'); rb.appendChild(el('small', null, tier));
+    var rbt = el('b', null, rname); rbt.style.fontSize = Math.max(22, Math.min(vw * 0.13, 72, (vw - 50) / (rname.length + 1.4))) + 'px';
+    rb.appendChild(rbt); inner.appendChild(rb);
+    if (isNew) inner.appendChild(el('div', 'dk-seal', '新発見'));
+
+    // 5) 台詞：一文字ずつ語る
+    var say = el('div', 'dk-say'), head = el('div', 'who');
+    head.appendChild(el('span', null, c.t)); head.appendChild(el('em', null, '連携 ' + Math.round(dmg * 1.5)));
+    var txt = el('div', 'txt');
+    Array.from(c.m).forEach(function(ch, i){ var sp = el('span', null, ch); sp.style.animationDelay = (2.05 + i * 0.045) + 's'; txt.appendChild(sp); });
+    say.appendChild(head); say.appendChild(txt);
+    if (isNew) say.appendChild(el('div', 'reg', '「掛け合いの記録」に書きとめた'));
+    inner.appendChild(say);
+
+    root.appendChild(el('div', 'dk-flash'));
+    fx.classList.add('dim'); fx.appendChild(root);
+    tone([196, 262], 0.12, 'sawtooth');
+    setTimeout(function(){ tone([523, 659, 784], 0.07, 'sine'); }, 350);
+    setTimeout(function(){ tone([98, 131, 196], 0.28, 'sawtooth'); tone([523, 784, 1047, 1319], 0.1); }, 900);
+    setTimeout(function(){ tone([1568, 2093], 0.05, 'sine'); }, 1700);
+    return MS;
+  }
   function skillFx(dmg, crit){
     var e = equipped();
     if (!e.length){
@@ -2068,18 +2211,8 @@ body[data-screen="home"]>.wrap{background:none;border:0;box-shadow:none;max-widt
       var key = c.k.join('+');
       var isNew = !P.found[key];
       if (isNew){ P.found[key] = todayJST(); saveP(); }
-      scrim();
-      var box = document.createElement('div'); box.className = 'skill duo';
-      var tag = document.createElement('div'); tag.className = 'stag'; tag.textContent = (isNew ? '新発見! ' : '') + '掛け合い・' + c.n;
-      var h = document.createElement('div'); h.className = 'sname';
-      h.textContent = c.k.map(function(k){ return '『' + WORK[k].t + '』'; }).join(' ＋ ');
-      var who = document.createElement('div'); who.className = 'swho'; who.textContent = c.t; var faces = el('div', 'combo-motifs'); var seenAuthors = {}; c.k.forEach(function(k){ var b = WORK[k].b; if (!seenAuthors[b.id]){ seenAuthors[b.id] = true; faces.appendChild(authorIcon(b, 56)); } }); who.insertBefore(faces, who.firstChild);
-      var q = document.createElement('div'); q.className = 'squote'; q.textContent = c.m;
-      box.appendChild(tag); box.appendChild(h); box.appendChild(who); box.appendChild(q);
-      fx.appendChild(box);
-      attackFx({fx:WORK[c.k[0]].fx, t:4}, Math.round(dmg * 1.5), true);
-      tone([523, 659, 784, 988, 1319], 0.1);
-      return 3600;
+      clearFx();
+      return duoFx(c, isNew, dmg);
     }
     var w = WORK[e[Math.floor(Math.random() * e.length)]];
     scrim();
