@@ -1887,7 +1887,7 @@ body[data-screen="home"]>.wrap{background:none;border:0;box-shadow:none;max-widt
     var lv = bondLv(id);
     if (!lv && !isSoloMaster(id)) return '';
     if (lv >= BOND_MAX) return '絆 ' + BOND_MAX + '/99　魂の友。この人の掛け合いは、いちばん届きやすい';
-    if (!lv) return '絆 0/99　深淵の禁書庫で約1000問、掛け合いが届きやすくなる';
+    if (!lv) return '絆 0/99　深淵の禁書庫で、掛け合いが届きやすくなる';
     var pct = Math.round(160 * lv / BOND_MAX);
     return '絆 ' + lv + '/99　この人の掛け合いが起きやすくなる（+' + pct + '%）';
   }
