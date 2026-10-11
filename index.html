@@ -277,9 +277,13 @@ h1{font-size:26px;font-weight:900;margin:8px 0 4px}
 .bnameline .author-label{min-width:0}
 .crem{font-size:13px;font-weight:800;color:var(--primary);white-space:nowrap;margin-left:auto}
 .bstar{color:#c4921a;font-weight:900;margin-left:2px}
-.tipnote{font-size:13px;color:var(--sub);background:var(--ctx);border-radius:12px;padding:10px 12px;margin:0 0 12px;line-height:1.6}
+.tipnote{font-size:13px;color:var(--sub);background:var(--ctx);border-radius:12px;padding:8px 12px;margin:0 0 12px;line-height:1.55;display:flex;flex-direction:column;gap:2px}
 .bondline{font-size:12px;color:var(--sub);margin:2px 0 0}
 .bondline b{color:var(--ink)}
+.comhint{font-size:13px;color:var(--sub);margin:6px 0 8px;line-height:1.55}
+.comhint em{font-style:normal;color:var(--ink);font-weight:700}
+.bhead{align-items:flex-start}
+.bnameline{width:100%}
 .ufhint{display:block;font-size:12px;color:var(--sub);line-height:1.5;margin-top:4px;font-weight:500;font-style:normal}
 .unfound .uf{display:flex;flex-direction:column;align-items:flex-start;gap:2px;min-width:200px;max-width:100%;padding:8px 10px;opacity:1}
 .chip.dungeon small{max-width:16em}
@@ -1714,9 +1718,9 @@ body[data-screen="home"]>.wrap{background:none;border:0;box-shadow:none;max-widt
     .concat(SOLOS);
   ACT.stick = [['筆','swing'], 'ことばを綴った！'];
 
-  // 招きの印をもらうレベル（全77枚。おおよそレベル600で全員分。後半ほど間隔が開く）
+  // 招きの印をもらうレベル（全77枚。おおよそレベル900で全員分。後半ほど間隔が開く）
   var MILE = (function(){
-    var m = [1], prev = 1, lv = 1, g0 = 2, k = (599 - 76 * g0) / (76 * 77 / 2);
+    var m = [1], prev = 1, lv = 1, g0 = 2, k = (899 - 76 * g0) / (76 * 77 / 2);
     for (var i = 1; i <= 76; i++){
       lv += g0 + k * i;
       var v = Math.round(lv);
@@ -1804,19 +1808,14 @@ body[data-screen="home"]>.wrap{background:none;border:0;box-shadow:none;max-widt
     P.offer = null; saveP(); return true;
   }
   // 閃き。同行回数が増えるほど確率が上がる(30回で2つ、50回でほぼ全部)
-  // 深層の禁書庫では絆レベルに応じてさらに閃きやすくなる
-  function sparkRate(n, id){
-    var r = Math.min(0.40, 0.02 + 0.005 * n);
-    if (mode === 'all' && id) r = Math.min(0.55, r * (1 + 0.08 * bondLv(id)));
-    return r;
-  }
+  function sparkRate(n){ return Math.min(0.40, 0.02 + 0.005 * n); }
   function learnTick(){
     var got = [];
     party().forEach(function(id){
       P.cnt[id] = cntOf(id) + 1;
       var yet = BMAP[id].w.filter(function(w){ return !learned(w[0]); });
       if (!yet.length) return;
-      if (Math.random() < sparkRate(P.cnt[id], id)){
+      if (Math.random() < sparkRate(P.cnt[id])){
         var w = yet[Math.floor(Math.random() * yet.length)];
         P.learned[w[0]] = 1;
         got.push({b: BMAP[id], w: w});
@@ -1825,7 +1824,8 @@ body[data-screen="home"]>.wrap{background:none;border:0;box-shadow:none;max-widt
     saveP();
     return got;
   }
-  // 深層の禁書庫でのみ絆が育つ。正解するたびにパーティ全員 +1
+  // 深層の禁書庫でのみ絆が育つ。正解するたびに☆の同行者 +1、上限99
+  var BOND_MAX = 99;
   function bondTick(){
     if (mode !== 'all') return [];
     P.bond = P.bond || {};
@@ -1833,9 +1833,9 @@ body[data-screen="home"]>.wrap{background:none;border:0;box-shadow:none;max-widt
     party().forEach(function(id){
       if (!isSoloMaster(id)) return;
       var before = bondLv(id);
-      P.bond[id] = (P.bond[id] || 0) + 1;
+      P.bond[id] = Math.min(BOND_MAX, (P.bond[id] || 0) + 1);
       var after = bondLv(id);
-      if (after > before) ups.push({id:id, lv:after});
+      if (after > before && (after === BOND_MAX || after % 10 === 0)) ups.push({id:id, lv:after});
     });
     saveP();
     return ups;
@@ -1855,41 +1855,46 @@ body[data-screen="home"]>.wrap{background:none;border:0;box-shadow:none;max-widt
   function comboReachable(c){ return comboAuthors(c).every(hasAlly); }
   function isSoloMaster(id){ return learnedOf(id) >= 3; }
   function soloMasters(){ return allyIds().filter(isSoloMaster); }
-  function remainingCombosFor(id){
+  function remainingCombosOf(id){
     return COMBOS.filter(function(c){
       if (P.found && P.found[c.k.join('+')]) return false;
       if (!comboReachable(c)) return false;
       return comboAuthors(c).indexOf(id) >= 0;
-    }).length;
+    });
   }
+  function remainingCombosFor(id){ return remainingCombosOf(id).length; }
   function bondOf(id){ return (P.bond && P.bond[id]) || 0; }
-  function bondLv(id){
-    var b = bondOf(id);
-    if (b >= 160) return 5;
-    if (b >= 100) return 4;
-    if (b >= 60) return 3;
-    if (b >= 30) return 2;
-    if (b >= 10) return 1;
-    return 0;
+  function bondLv(id){ return Math.min(BOND_MAX, bondOf(id)); }
+  function bondText(id){
+    var lv = bondLv(id);
+    if (!lv && !isSoloMaster(id)) return '';
+    if (lv >= BOND_MAX) return '絆 ' + BOND_MAX + '/99　魂の友。この人の掛け合いは、いちばん届きやすい';
+    if (!lv) return '絆 0/99　深層の禁書庫で、掛け合いが届きやすくなる';
+    var pct = Math.round(160 * lv / BOND_MAX);
+    return '絆 ' + lv + '/99　この人の掛け合いが起きやすくなる（+' + pct + '%）';
   }
-  function bondLabel(lv){
-    return ['まだ浅い', '知りはじめ', '語らい', '信頼', '深い絆', '魂の友'][lv] || '';
+  function comboBond(c){
+    var ids = comboAuthors(c);
+    if (!ids.length) return 0;
+    var s = 0; ids.forEach(function(id){ s += bondLv(id); });
+    return s / ids.length;
   }
-  function bondPerkText(lv){
-    return [
-      '特典なし',
-      '技が閃きやすくなる',
-      '掛け合いが起きやすくなる',
-      '会心が出やすくなる',
-      '獲得ptが増える',
-      'まれに絆の一撃が追加される'
-    ][lv] || '';
+  function comboRateOf(c){
+    var rate = c.r === 3 ? 0.08 : 0.12;
+    if (mode !== 'all') return rate;
+    var b = comboBond(c);
+    rate = rate * (1 + 1.6 * (b / BOND_MAX));
+    if (b >= BOND_MAX) rate = Math.max(rate, 0.42);
+    return Math.min(0.50, rate);
   }
-  function partyBondLv(){
-    var pt = party().filter(isSoloMaster);
-    if (!pt.length) return 0;
-    var s = 0; pt.forEach(function(id){ s += bondLv(id); });
-    return s / pt.length;
+  function pickReadyCombo(cs){
+    if (!cs.length) return null;
+    if (mode !== 'all') return cs[Math.floor(Math.random() * cs.length)];
+    var w = cs.map(function(c){ return 1 + comboBond(c) * (comboBond(c) >= BOND_MAX ? 4 : 1); });
+    var sum = 0; w.forEach(function(n){ sum += n; });
+    var r = Math.random() * sum, acc = 0;
+    for (var i = 0; i < cs.length; i++){ acc += w[i]; if (r <= acc) return cs[i]; }
+    return cs[cs.length - 1];
   }
 
   // 共通の装丁アイコン。ゲームの状態や抽選には関与しない。
@@ -2210,6 +2215,193 @@ body[data-screen="home"]>.wrap{background:none;border:0;box-shadow:none;max-widt
       ? '同じ棚の文豪たちの技が、同時にそろうとき'
       : 'ちがう棚の文豪たちの技が、偶然同じ机に並ぶとき';
   }
+  // 作品の気配。題名も作者名も出さず、相手の技の空気だけを渡す
+  var WORK_AURA = {
+    neko:'猫との相性は、昔からよかったんだ',
+    bot:'曲がったことが、どうにも気になって仕方ない',
+    kokoro:'木曜の夜に、だれにも言えぬものが残っている',
+    maihime:'異国の灯の下で、心が二つに割れる気配',
+    takase:'舟の上で、救うこととあやめることが隣りあう',
+    sansho:'引きさかれた家族が、再会を信じている',
+    ukigumo:'勤めを失った男の、行き場のない午後',
+    konjiki:'熱海の浜で、誰かが誰かを蹴り倒す',
+    take:'子どものままでは、いられなくなる季節',
+    nigori:'濁った水の底にも、灯がともっている',
+    jusan:'十三夜の月の下を、来た道へひとり帰る',
+    bokuju:'一滴の墨に、今日を生きた証がある',
+    gakumon:'天は人の上に人を造らない、という声',
+    ginga:'夜空を渡る列車の音が、遠くでする',
+    chumon:'注文が多いのは、客のほうだろうか',
+    matasa:'どっどど どどうど、風が村へ入ってくる',
+    gon:'つぐないのつもりが、届かなかった狐',
+    tebukuro:'人間はこわい、でも母さんは信じられる',
+    rosoku:'赤い蝋燭が、海辺の夜に燃えている',
+    midare:'みだれた髪のままで、恋をうたう声',
+    kimishini:'どうか、死なないでいてください、という叫び',
+    genji:'千年の物語が、今のことばに移される',
+    kotori:'小鳥も鈴も、みんなちがってみんないい',
+    tairyo:'浜は祭りなのに、海の中では弔いだ',
+    kodama:'返ってくる声は、ほんとうは自分の声',
+    rasho:'荒れ果てた門の向こうで、だれかが迷っている',
+    kumo:'細い糸が、頭上から一本たらされている',
+    tosh:'黄金よりも、ほしいものがあった少年',
+    kinosaki:'生と死が、思ったより近くにある湯治場',
+    anya:'暗い夜道を、それでも歩きつづける足音',
+    shunkin:'美しいものを、見ずに愛しぬく話',
+    inei:'明るすぎる光は、かえって美しさを消す',
+    sasame:'四姉妹の季節が、雪のように過ぎていく',
+    yukiguni:'雪のしんしんと降る気配がする',
+    izu:'旅の終わりに、涙がひとつこぼれる',
+    kinkaku:'美しすぎるものを、焼いてしまいたくなる',
+    shiosai:'島の波の音が、少年と少女を結ぶ',
+    kamen:'仮面のほうが、素顔より正直だった',
+    kazetachi:'風が立った。生きよう、という呟き',
+    onshu:'仇も味方も、同じ岩を掘りつづける',
+    chichikaeru:'今さら帰ってきた父を、どうするか',
+    melos:'約束のために、ただ走るしかない',
+    ningen:'笑ってみせるのが、いちばんうまくなった男',
+    shayo:'滅びゆくものにも、朝日は差す',
+    daraku:'落ちきってから、人は自分を見つける',
+    sakuramori:'満開の桜の下は、しんと静かだ',
+    meoto:'二人で一杯ずつ、それでちょうどええ',
+    kani:'おい、地獄さ行ぐんだで、という声',
+    futon:'残されたふとんに、顔をうずめる夜',
+    hakai:'隠しつづけた言葉を、ついに打ち明ける',
+    yoake:'木曾路はすべて、山の中を行く',
+    koya:'山を越えれば、人ならぬものに会う',
+    nijumenso:'変装の名人が、今夜も予告状を出す',
+    dzaka:'開いた障子が、犯人の名を告げる',
+    dogura:'自分がだれなのか、分からなくなる朝',
+    kaidan:'闇が、琵琶法師の耳を持ち去る',
+    lemon:'この黄色い果実は、きっと爆弾なのだ',
+    sakura:'桜の樹の下には、何かが埋まっている',
+    sange:'臆病な自尊心が、わが身を獣に変える',
+    riryo:'誇りを捨てても、生きねばならぬ日',
+    genjimono:'五十四帖の恋と権力が、静かに動く',
+    nikki:'宮中の人々を、冷たい目で見ている',
+    makura:'春はあけぼの。空が少しずつ白くなる',
+    koro:'問いに、御簾を上げて答えてみせた雪',
+    hojoki:'川の流れは絶えずして、しかももとの水ではない',
+    tsure:'することもないので、筆を走らせる午後',
+    hosomichi:'月日は百代の過客、という旅立ち',
+    nozarashi:'骨になる覚悟で、旅に出る朝',
+    sarumino:'師と弟子で、一つの句集を編む夜',
+    shichiban:'やせ蛙も、負けるなと応援されている',
+    busonku:'菜の花や月は東に日は西に、という空',
+    tosa:'男もすなる日記を、書いてみようという声',
+    kanajo:'歌は、人の心を種として生まれる',
+    hamlet:'生きるべきか、死ぬべきか、迷いつづける',
+    macbeth:'予言を信じた手が、血で汚れていく',
+    romeo:'名前さえなければ、結ばれたのに',
+    carol:'けちな老人のもとへ、三人の幽霊が来る',
+    oliver:'もう少しだけ、おかわりをください',
+    kuroneko:'壁の中から、猫の声が聞こえる',
+    usher:'古い館が、音を立てて裂けていく',
+    karasu:'鴉はただ一言を、くり返すのみ',
+    jane:'わたしは自分の足で、ここに立っている',
+    koman:'第一印象ほど、あてにならぬものはない',
+    tom:'塀のペンキ塗りを、遊びに変えてしまう',
+    huck:'いかだに乗って、大きな川をくだる',
+    ouji:'服を取りかえたら、世界が入れかわる',
+    alice:'うさぎを追って、穴に落ちてしまった',
+    kagami:'鏡の向こうは、すべてが逆さまだ',
+    koufuku:'体の金も宝石も、みんな配ってしまう王子',
+    dorian:'年をとるのは、本人ではなく絵のほう',
+    holmes:'靴の泥だけで、どこから来たか分かる',
+    baskerville:'霧の荒野に、巨大な犬の影',
+    takarajima:'宝の地図と、片足の料理人が待っている',
+    jekyll:'薬を飲むと、もう一人の自分が出る',
+    rojin:'八十四日の不漁のあと、大物がかかる',
+    tsumi:'一線を越えた者に、眠れる夜はない',
+    karama:'父をにくむ兄弟が、神に問いかける',
+    senso:'歴史を動かすのは、名もなき人々だ',
+    anna:'幸福な家は、どれも似かよっている、という書き出し',
+    sakuranosono:'桜の木が、一本ずつ切り倒されていく',
+    kamome:'舞台の上で、若い夢がついえる',
+    gaito:'新しい外套が、男の一生を変えた',
+    hana:'ある朝、鼻が顔から逃げ出した',
+    chichitoko:'父の信じるものを、子は信じない',
+    hatsukoi:'はじめての恋の相手は、思いもよらぬ人',
+    onegin:'断った手紙が、何年もあとに効いてくる',
+    spade:'三枚のカードに、男は正気を失う',
+    miserables:'一本のパンが、人の一生を変えた',
+    notredame:'鐘楼の上から、男は街を見下ろす',
+    faust:'魂と引きかえに、すべてを手に入れる契約',
+    werther:'かなわぬ恋が、一人の若者を追いつめる',
+    quijote:'風車を巨人と信じて、槍を構える',
+    henshin:'朝、目がさめると虫になっていた',
+    shinpan:'罪も知らされぬまま、裁かれていく',
+    shiro:'たどり着けない城を、見上げつづける',
+    hoshi:'大切なものは、目には見えない',
+    yakan:'夜の空を、たった一人で越えていく',
+    sanjushi:'一人はみんなのために、みんなは一人のために',
+    montecristo:'牢を出た男が、名を変えて戻ってくる',
+    kaitei:'鋼の船が、海の底を走る',
+    hachiju:'賭けのために、世界を一周してみせる',
+    kubikazari:'借りた首飾りに、一生を奪われる',
+    ningyohime:'声と引きかえに、二本の足を得る',
+    match:'最後の一本が、いちばん明るかった',
+    minikui:'鏡にうつったのは、白鳥だった',
+    hensel:'パンくずの道は、鳥が食べてしまった',
+    akazukin:'おばあさんの口が、やけに大きい',
+    buremen:'年老いた四匹が、重なって影を作る',
+    gekka:'月と影を相手に、三人で飲む夜',
+    shunbo:'国は破れても、山河はそこにある',
+    kokyo:'歩く人が多くなれば、そこが道になる',
+    akyu:'負けても、頭の中では勝っている男',
+    fujino:'仙台の恩師の写真が、机の上にある',
+    shiki:'人の死には、鴻毛より軽いものもある',
+    rongo:'学んで時にこれを習う、またよろこばしからずや',
+    tomoari:'遠くから友が来る。これほど楽しいことはない',
+    onko:'古いものをたずねて、新しいものを知る'
+  };
+  var AURA_KEY = [
+    [/猫/, '猫との相性は、昔からよかったんだ'],
+    [/雪/, '雪のしんしんと降る気配がする'],
+    [/桜/, '桜の下で、何かが静かに過ぎていく'],
+    [/月/, '月の光が、今夜はいつもより近い'],
+    [/海|潮|舟|船/, '潮のにおいが、机の向こうからする'],
+    [/夜/, '夜が、いつもより一段深い'],
+    [/風/, '風が立って、だれかの服を揺らす'],
+    [/旅|道/, '旅の空が、まだ閉じない'],
+    [/恋|愛/, '言えなかった言葉が、残っている'],
+    [/父/, '父の影が、玄関のところまで来ている'],
+    [/夢/, '夢のつづきを、だれかが待っている'],
+    [/鬼|闇|怪|地獄/, 'この世の外側が、少し開いている'],
+    [/詩|歌|句/, '短い一行が、胸の奥で鳴る'],
+    [/金|宝/, 'きらめくものに、人生を持っていかれる気配'],
+    [/子|少年/, '子どもの目が、先に謎を見ている'],
+    [/花/, '花のにおいが、季節をひとつ飛ばす']
+  ];
+  function workAura(w){
+    if (!w) return 'まだ見ぬ技が、机のすみで待っている';
+    if (WORK_AURA[w.id]) return WORK_AURA[w.id];
+    var t = w.t || '';
+    for (var i = 0; i < AURA_KEY.length; i++){
+      if (AURA_KEY[i][0].test(t)) return AURA_KEY[i][1];
+    }
+    return '見知らぬ技の気配が、一度だけ机をかすめる';
+  }
+  function nextHintFor(id){
+    var list = remainingCombosOf(id);
+    if (!list.length) return '';
+    var pick = null;
+    for (var i = 0; i < list.length; i++){ if (list[i].r !== 5){ pick = list[i]; break; } }
+    if (!pick) pick = list[0];
+    if (pick.r === 5) return 'すべての技をひらめいたとき、ひとりの筆が完成する。';
+    var other = null;
+    pick.k.forEach(function(k){
+      var w = WORK[k];
+      if (w && w.b.id !== id && !other) other = w;
+    });
+    if (!other){
+      pick.k.forEach(function(k){
+        var w = WORK[k];
+        if (w && w.b.id === id && !other) other = w;
+      });
+    }
+    return workAura(other);
+  }
   function duoFx(c, isNew, dmg){
     var ws = c.k.map(function(k){ return WORK[k]; });
     var n = ws.length, solo = c.r === 5, trio = !solo && n >= 3;
@@ -2317,10 +2509,8 @@ body[data-screen="home"]>.wrap{background:none;border:0;box-shadow:none;max-widt
     }
     var cs = comboReady(), c = null;
     if (cs.length){
-      var pick = cs[Math.floor(Math.random() * cs.length)];
-      var rate = pick.r === 3 ? 0.08 : 0.12;
-      if (mode === 'all') rate = Math.min(0.28, rate * (1 + 0.12 * partyBondLv()));
-      if (Math.random() < rate) c = pick;
+      var pick = pickReadyCombo(cs);
+      if (Math.random() < comboRateOf(pick)) c = pick;
     }
     if (c){
       var key = c.k.join('+');
@@ -2352,7 +2542,10 @@ body[data-screen="home"]>.wrap{background:none;border:0;box-shadow:none;max-widt
     $('jobslead').textContent = '仲間 ' + allyIds().length + '人・パーティ ' + party().length + '/' + PARTY_MAX + '人・閃いた技 ' + e.length + '。' +
       (P.tickets ? '招きの印が' + P.tickets + 'まいあります。新しい文豪をさがそう。' :
         (nextMile(lvOf(P.xp).lv) ? 'つぎの招きの印はレベル' + nextMile(lvOf(P.xp).lv) + 'でもらえます。' : '招きの印はすべて使いました。'));
-    box.appendChild(el('p', 'tipnote', '名前の☆は、三人の技をすべて閃いて一人掛け合いをマスターしたしるし。右側の数は、いま仲間になっている文豪だけでまだ見つけていない掛け合い（一人掛け合いを含む）ののこりです。'));
+    var tip = el('p', 'tipnote');
+    tip.appendChild(el('span', null, '☆：一人掛け合いマスター'));
+    tip.appendChild(el('span', null, '見つけていない掛け合いの数を表示'));
+    box.appendChild(tip);
     var tb = el('div', 'tabs');
     [['party','手持ち'], ['scout','文豪をさがす' + (P.tickets ? '（印' + P.tickets + '）' : '')], ['archive','掛け合いの記録']].forEach(function(x){
       var b = el('button', 'tabbtn' + (tab === x[0] ? ' on' : ''), x[1]);
@@ -2384,7 +2577,7 @@ body[data-screen="home"]>.wrap{background:none;border:0;box-shadow:none;max-widt
         c.appendChild(nm);
         var bl = bondLv(id);
         c.appendChild(el('small', null, '同行 ' + cntOf(id) + '問・技 ' + learnedOf(id) + '/3' +
-          (bl ? '・絆 ' + bl + '（' + bondLabel(bl) + '）' : '') + '・残り掛け合い ' + remainingCombosFor(id)));
+          (isSoloMaster(id) ? '・絆 ' + bl + '/99' : '') + '・残り ' + remainingCombosFor(id)));
         pl.appendChild(c);
       });
       head.appendChild(pl);
@@ -2414,13 +2607,15 @@ body[data-screen="home"]>.wrap{background:none;border:0;box-shadow:none;max-widt
         };
         hd.appendChild(tg);
         bs.appendChild(hd);
-        var bl = bondLv(b2.id);
         bs.appendChild(el('p', 'bdesc', b2.d + '　／　同行 ' + cntOf(b2.id) + '問・技 ' + learnedOf(b2.id) + '/3'));
-        if (bl){
-          bs.appendChild(el('p', 'bondline', '絆 Lv.' + bl + '「' + bondLabel(bl) + '」— ' + bondPerkText(bl) +
-            (bl < 5 ? '（次まであと' + ([10,30,60,100,160][bl] - bondOf(b2.id)) + '）' : '')));
-        } else if (isSoloMaster(b2.id)){
-          bs.appendChild(el('p', 'bondline', '絆は深層の禁書庫で育つ。正解するたびに深まる。'));
+        var bt = bondText(b2.id);
+        if (bt) bs.appendChild(el('p', 'bondline', bt));
+        var hint = nextHintFor(b2.id);
+        if (hint){
+          var hp = el('p', 'comhint');
+          hp.appendChild(el('em', null, '気配　'));
+          hp.appendChild(document.createTextNode(hint));
+          bs.appendChild(hp);
         }
         var grid = el('div', 'wgrid');
         b2.w.forEach(function(w){
@@ -2773,7 +2968,7 @@ body[data-screen="home"]>.wrap{background:none;border:0;box-shadow:none;max-widt
       P.streak = (P.day === y) ? (P.streak || 0) + 1 : 1; P.day = t; saveP();
     }
     var threat = queue.reduce(function(s, it){ return s + ptFactor(it.q); }, 0);
-    if (mode === 'all') threat = Math.round(threat * (1.15 + 0.05 * partyBondLv()));
+    if (mode === 'all') threat = Math.round(threat * 1.15);
     newEnemy(threat);
     var scene = document.querySelector('#enemy .scene-label');
     if (scene) scene.textContent = mode === 'all' ? '深層の禁書庫' : mode === 'gnorev' ? '教養の書庫' : '書斎にひらく、物語';
@@ -2887,25 +3082,13 @@ body[data-screen="home"]>.wrap{background:none;border:0;box-shadow:none;max-widt
     var wait = 1500;
     if (ok){
       combo++;
-      var critChance = 0.1, blAvg = mode === 'all' ? partyBondLv() : 0;
-      if (mode === 'all') critChance = Math.min(0.35, 0.1 + 0.035 * blAvg);
-      var crit = Math.random() < critChance;
+      var crit = Math.random() < 0.1;
       gained = Math.round((10 + Math.min(combo - 1, 10) * 2) * ptFactor(q));
-      if (mode === 'all' && blAvg >= 4) gained = Math.round(gained * (1 + 0.08 * (blAvg - 3)));
       if (crit) gained *= 2;
-      var bondStrike = 0;
-      if (mode === 'all' && blAvg >= 5 && Math.random() < 0.12){
-        bondStrike = Math.round(gained * 0.5);
-        gained += bondStrike;
-      }
       var before = lvOf(P.xp).lv; P.xp = Math.min(P.xp + gained, 9e8); gainedTotal += gained; saveP();
       var killed = hitEnemy(gained + Math.floor(Math.random() * 6));
       if (killed){ P.xp += 30; gainedTotal += 30; saveP(); }
       celebrate(combo, gained + (killed ? 30 : 0), rankUp && !it.retry, L2);
-      if (bondStrike){
-        var bs = document.createElement('div'); bs.className = 'bondfx'; bs.textContent = '絆の一撃! +' + bondStrike;
-        fx.appendChild(bs);
-      }
       wait = skillFx(gained, crit);
       var bondUps = it.retry ? [] : bondTick();
       if (bondUps.length){
@@ -2913,7 +3096,9 @@ body[data-screen="home"]>.wrap{background:none;border:0;box-shadow:none;max-widt
         var atb = wait;
         setTimeout(function(){
           var m = document.createElement('div'); m.className = 'bondfx';
-          m.textContent = bb.n + 'との絆が深まった! Lv.' + bup.lv + '「' + bondLabel(bup.lv) + '」';
+          m.textContent = bup.lv >= BOND_MAX
+            ? bb.n + 'との絆が極まった! 魂の友'
+            : bb.n + 'との絆が深まった! ' + bup.lv + '/99';
           fx.appendChild(m); tone([659, 880, 1175], 0.08);
         }, Math.min(atb, 900));
         wait = Math.max(wait, 2200);
@@ -2970,7 +3155,7 @@ body[data-screen="home"]>.wrap{background:none;border:0;box-shadow:none;max-widt
     var l = lvOf(P.xp);
     var bondNote = '';
     if (mode === 'all' && party().length){
-      var parts = party().filter(isSoloMaster).map(function(id){ return BMAP[id].n + '絆' + bondLv(id); });
+      var parts = party().filter(isSoloMaster).map(function(id){ return BMAP[id].n + ' ' + bondLv(id) + '/99'; });
       if (parts.length) bondNote = ' ・ ' + parts.join('／');
     }
     $('rpt').textContent = '今回 +' + gainedTotal + 'pt ・ レベル ' + l.lv + '(つぎまで' + l.rest + 'pt)' + bondNote;
@@ -3075,7 +3260,7 @@ body[data-screen="home"]>.wrap{background:none;border:0;box-shadow:none;max-widt
   });
   initParty();
   buildHome();
-  window.__ichimon = { S: function(){ return S; }, P: function(){ return P; }, LOG: function(){ return LOG; }, WAIT: WAIT, DATA: DATA, CFG: CFG, KV: KV, lvOf: lvOf, showAnswer: showAnswer, BUNGO: BUNGO, GENRES: GENRES, COMBOS: COMBOS, WORK: WORK, openAllies: openAllies, learnTick: learnTick, learnedOf: learnedOf, party: party, isSoloMaster: isSoloMaster, remainingCombosFor: remainingCombosFor, comboHint: comboHint, bondLv: bondLv, bondOf: bondOf, MILE: MILE, mode: function(){ return mode; }, forceAnswer: function(r){ answer(r); }, currentAnswer: function(){ return queue[pos] && queue[pos].q && queue[pos].q.a; } };
+  window.__ichimon = { S: function(){ return S; }, P: function(){ return P; }, LOG: function(){ return LOG; }, WAIT: WAIT, DATA: DATA, CFG: CFG, KV: KV, lvOf: lvOf, showAnswer: showAnswer, BUNGO: BUNGO, GENRES: GENRES, COMBOS: COMBOS, WORK: WORK, openAllies: openAllies, learnTick: learnTick, learnedOf: learnedOf, party: party, isSoloMaster: isSoloMaster, remainingCombosFor: remainingCombosFor, comboHint: comboHint, nextHintFor: nextHintFor, workAura: workAura, bondLv: bondLv, bondOf: bondOf, comboRateOf: comboRateOf, MILE: MILE, mode: function(){ return mode; }, forceAnswer: function(r){ answer(r); }, currentAnswer: function(){ return queue[pos] && queue[pos].q && queue[pos].q.a; } };
 
 })();
 </script>
