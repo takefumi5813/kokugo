@@ -1825,7 +1825,7 @@ body[data-screen="home"]>.wrap{background:none;border:0;box-shadow:none;max-widt
     saveP();
     return got;
   }
-  // 絆は深淵の書庫の戦闘だけで育つ。☆の同行者で正解するたびに +1、約1000問で99（魂の友）
+  // 絆は深淵の禁書庫の戦闘だけで育つ。☆の同行者で正解するたびに +1、約1000問で99（魂の友）
   var BOND_MAX = 99, BOND_XP_MAX = 1000;
   var dungeon = '';
   function inDeep(){ return dungeon === 'deep'; }
@@ -1887,7 +1887,7 @@ body[data-screen="home"]>.wrap{background:none;border:0;box-shadow:none;max-widt
     var lv = bondLv(id);
     if (!lv && !isSoloMaster(id)) return '';
     if (lv >= BOND_MAX) return '絆 ' + BOND_MAX + '/99　魂の友。この人の掛け合いは、いちばん届きやすい';
-    if (!lv) return '絆 0/99　深淵の書庫で約1000問、掛け合いが届きやすくなる';
+    if (!lv) return '絆 0/99　深淵の禁書庫で約1000問、掛け合いが届きやすくなる';
     var pct = Math.round(160 * lv / BOND_MAX);
     return '絆 ' + lv + '/99　この人の掛け合いが起きやすくなる（+' + pct + '%）';
   }
@@ -2765,6 +2765,12 @@ body[data-screen="home"]>.wrap{background:none;border:0;box-shadow:none;max-widt
   }
   function poolFor(m, k){ var rf = rangeFilter(m), kf = kindFilter(k); return DATA.filter(function(q){ return rf(q) && kf(q); }); }
   function dueFor(m, k){ return poolFor(m, k).filter(isDue); }
+  function shelfLeft(m){
+    if (m === 'review' && !latestUnit()) return 0;
+    if (m === 'gnorev' && !nextGnorev()) return 0;
+    return dueFor(m, 'all').length;
+  }
+  function abyssOpen(){ return shelfLeft('review') === 0 && shelfLeft('gnorev') === 0; }
   function nextDueText(m, k){
     var up = poolFor(m, k).filter(function(q){ return !isDue(q); });
     if (!up.length) return '';
@@ -2789,14 +2795,18 @@ body[data-screen="home"]>.wrap{background:none;border:0;box-shadow:none;max-widt
   function buildHome(){
     hud(); drawQuest();
     var g = nextGnorev();
-    var gsub = g ? g.name + '(' + (+g.test.split('-')[1]) + '/' + (+g.test.split('-')[2]) + ')・第' + g.from + '〜' + g.to + '回' : '次のグノレブの範囲はまだ入っていません';
     var masters = soloMasters();
-    if (!g && mode === 'gnorev') mode = latestUnit() ? 'review' : (masters.length ? 'all' : 'gnorev');
+    var deepOpen = abyssOpen();
+    if (mode === 'gnorev' && !g) mode = latestUnit() ? 'review' : (deepOpen && masters.length ? 'all' : 'gnorev');
+    if (mode === 'review' && !latestUnit()) mode = g ? 'gnorev' : (deepOpen && masters.length ? 'all' : 'review');
+    if (mode === 'all' && !deepOpen) mode = (g && shelfLeft('gnorev') ? 'gnorev' : latestUnit() ? 'review' : 'gnorev');
     if (kind !== 'all' && !poolFor('all', kind).length) kind = 'all';
+    var deepSub = '(全範囲)';
+    if (!deepOpen) deepSub = '「書庫」と「教養の書庫」が残っているため開かれていない';
     chipRow('modes', [
-      {key:'gnorev', title:'教養の書庫', sub:(g ? gsub + '・どの文豪でも' : '次回グノレブの範囲・どの文豪でも'), dis:!g},
-      {key:'review', title:'次回復習テスト対策', dis:!latestUnit()},
-      {key:'all', title:'深淵の書庫', sub:'すべての問題・☆の文豪のみ・絆が育つ', dis:!masters.length}
+      {key:'review', title:'書庫', sub:'(復習テスト用)', dis:!latestUnit()},
+      {key:'gnorev', title:'教養の書庫', sub:'(グノレブ対策)', dis:!g},
+      {key:'all', title:'深淵の禁書庫', sub:deepSub, dis:!deepOpen}
     ], mode, function(k){ mode = k; });
     chipRow('kinds', [
       {key:'all', title:'ぜんぶ'}, {key:'kaki', title:'漢字の書き', sub:'画面に書く'},
@@ -2805,12 +2815,14 @@ body[data-screen="home"]>.wrap{background:none;border:0;box-shadow:none;max-widt
     ].filter(function(d){ return d.key === 'all' || poolFor('all', d.key).length; }), kind, function(k){ kind = k; });
     chipRow('counts', [{key:5,title:'5問'},{key:10,title:'10問'},{key:20,title:'20問'},{key:0,title:'ぜんぶ'}], count, function(k){ count = k; });
     var pool = poolFor(mode, kind), due = pool.filter(isDue), nx = nextDueText(mode, kind);
-    var deepOk = mode !== 'all' || (party().length > 0 && party().every(isSoloMaster));
+    var deepOk = mode !== 'all' || (deepOpen && party().length > 0 && party().every(isSoloMaster));
     $('start').disabled = due.length === 0 || !deepOk;
-    if (mode === 'all' && !masters.length){
-      $('dueinfo').textContent = '深淵の書庫は、三人の技をすべて閃いた☆の文豪だけが入堂できる。絆はここではじめて育つ。';
+    if (mode === 'all' && !deepOpen){
+      $('dueinfo').textContent = '「書庫」と「教養の書庫」が残っているため開かれていない。';
+    } else if (mode === 'all' && !masters.length){
+      $('dueinfo').textContent = '深淵の禁書庫は、三人の技をすべて閃いた☆の文豪だけが入堂できる。絆はここではじめて育つ。';
     } else if (mode === 'all' && !deepOk){
-      $('dueinfo').textContent = '深淵の書庫へは、パーティを☆の文豪だけにしてから入ろう。';
+      $('dueinfo').textContent = '深淵の禁書庫へは、パーティを☆の文豪だけにしてから入ろう。';
     } else {
       $('dueinfo').textContent = due.length
         ? 'いま出せる問題: ' + due.length + '問(この書庫で' + pool.length + '問)' + (mode === 'all' ? '・ここだけで絆が育つ' : '')
@@ -2972,7 +2984,7 @@ body[data-screen="home"]>.wrap{background:none;border:0;box-shadow:none;max-widt
   function begin(){
     dungeon = (mode === 'all') ? 'deep' : '';
     if (dungeon === 'deep'){
-      if (!soloMasters().length || !party().length || !party().every(isSoloMaster)){
+      if (!abyssOpen() || !soloMasters().length || !party().length || !party().every(isSoloMaster)){
         dungeon = '';
         buildHome(); show('home'); return;
       }
@@ -2991,7 +3003,7 @@ body[data-screen="home"]>.wrap{background:none;border:0;box-shadow:none;max-widt
     if (inDeep()) threat = Math.round(threat * 1.15);
     newEnemy(threat);
     var scene = document.querySelector('#enemy .scene-label');
-    if (scene) scene.textContent = inDeep() ? '深淵の書庫' : mode === 'gnorev' ? '教養の書庫' : '書斎にひらく、物語';
+    if (scene) scene.textContent = inDeep() ? '深淵の禁書庫' : mode === 'gnorev' ? '教養の書庫' : mode === 'review' ? '書庫' : '書斎にひらく、物語';
     var enc = document.querySelector('#enemy .encaption');
     if (enc) enc.textContent = inDeep() ? '絆が試される影' : '物語から現れた影';
     show('play'); render();
@@ -3285,7 +3297,7 @@ body[data-screen="home"]>.wrap{background:none;border:0;box-shadow:none;max-widt
   });
   initParty();
   buildHome();
-  window.__ichimon = { S: function(){ return S; }, P: function(){ return P; }, LOG: function(){ return LOG; }, WAIT: WAIT, DATA: DATA, CFG: CFG, KV: KV, lvOf: lvOf, showAnswer: showAnswer, BUNGO: BUNGO, GENRES: GENRES, COMBOS: COMBOS, WORK: WORK, openAllies: openAllies, learnTick: learnTick, learnedOf: learnedOf, party: party, isSoloMaster: isSoloMaster, remainingCombosFor: remainingCombosFor, comboHint: comboHint, nextHintFor: nextHintFor, workAura: workAura, bondLv: bondLv, bondOf: bondOf, comboRateOf: comboRateOf, MILE: MILE, mode: function(){ return mode; }, inDeep: inDeep, forceAnswer: function(r){ answer(r); }, currentAnswer: function(){ return queue[pos] && queue[pos].q && queue[pos].q.a; } };
+  window.__ichimon = { S: function(){ return S; }, P: function(){ return P; }, LOG: function(){ return LOG; }, WAIT: WAIT, DATA: DATA, CFG: CFG, KV: KV, lvOf: lvOf, showAnswer: showAnswer, BUNGO: BUNGO, GENRES: GENRES, COMBOS: COMBOS, WORK: WORK, openAllies: openAllies, learnTick: learnTick, learnedOf: learnedOf, party: party, isSoloMaster: isSoloMaster, remainingCombosFor: remainingCombosFor, comboHint: comboHint, nextHintFor: nextHintFor, workAura: workAura, bondLv: bondLv, bondOf: bondOf, comboRateOf: comboRateOf, MILE: MILE, mode: function(){ return mode; }, inDeep: inDeep, abyssOpen: abyssOpen, shelfLeft: shelfLeft, forceAnswer: function(r){ answer(r); }, currentAnswer: function(){ return queue[pos] && queue[pos].q && queue[pos].q.a; } };
 
 })();
 </script>
