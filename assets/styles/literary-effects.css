@@ -1,0 +1,111 @@
+/* The existing motifs use paper, charcoal outlines and flat printing inks.
+   Keep cut-ins in that same material language. No raster assets are required. */
+.literary-cut{--lit-paper:#eee5d3;--lit-ink:#292f2d;--lit-accent:#98473d;color:var(--lit-ink);font-family:"Klee One","Yu Mincho",serif;background:#202724}
+.literary-cut *{box-sizing:border-box}
+.literary-cut .spk-in{inset:max(18px,env(safe-area-inset-top)) max(18px,env(safe-area-inset-right)) max(96px,calc(env(safe-area-inset-bottom) + 88px)) max(18px,env(safe-area-inset-left));background:var(--lit-paper);border:1px solid #a99572;box-shadow:0 16px 60px #0005}
+.literary-cut .spk-in::after,.duo-page::after,.skill::after{content:"";position:absolute;inset:8px;border:1px solid #9b83514d;pointer-events:none}
+.literary-scene{position:absolute;inset:0;overflow:hidden;color:var(--lit-accent);opacity:.22;pointer-events:none;background:repeating-linear-gradient(0deg,#59432504 0 1px,transparent 1px 4px)}
+.literary-scene svg{width:100%;height:100%;position:absolute;inset:0}
+.literary-cut .spk-core{position:relative;top:auto;left:auto;right:auto;transform:none;height:100%;max-width:840px;margin:auto;padding:clamp(22px,5vh,56px) 26px;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.literary-cut .spk-tag{font-family:"Yuji Syuku",serif;font-size:clamp(18px,4vw,26px);color:var(--lit-accent);background:none;text-shadow:none;border-block:1px solid var(--lit-accent);padding:3px 18px;letter-spacing:.25em;animation:lit-reveal .6s ease both;max-width:100%;overflow-wrap:anywhere}
+.spk-portrait{position:relative;display:grid;place-items:center;width:clamp(112px,26vh,240px);height:clamp(112px,26vh,240px);margin:14px 0 8px;animation:lit-reveal .8s ease .12s both;flex-shrink:1;min-height:0}
+.spk-portrait::before{content:"";position:absolute;inset:8%;border:1px solid #a9957266;border-radius:50%;background:#fffc}
+.spk-portrait .author-motif{position:relative;width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 8px 4px #362b1c18)}
+.literary-cut .spk-who{display:block;margin:0;color:var(--lit-ink);font-size:clamp(13px,3.6vw,18px);font-weight:600;letter-spacing:.18em;text-shadow:none;animation:lit-reveal .6s ease .22s both}
+.literary-cut .spk-title{max-width:100%;margin:12px 0 0;color:var(--lit-ink);font-size:clamp(24px,6.5vw,58px);font-weight:400;line-height:1.4;text-shadow:none;overflow-wrap:anywhere;animation:lit-reveal .7s ease .4s both}
+.literary-cut .spk-quote{font-family:"Klee One",serif;font-size:clamp(13px,3.7vw,18px);font-weight:600;max-width:30em;line-height:1.9;color:var(--lit-ink);text-shadow:none;margin:12px 0 0;animation:lit-reveal .7s ease .65s both}
+.literary-cut .spk-note{font-size:12px;font-weight:600;letter-spacing:.12em;margin-top:20px;padding:6px 0;background:none;color:var(--lit-accent);border-top:1px solid #9b835166;border-radius:0;animation:lit-reveal .6s ease .9s both}
+/* A spread of illustrated book leaves. The text panel has its own space. */
+.literary-cut .dk-in{inset:0;max-width:1040px;margin:auto;display:flex;flex-direction:column;padding:max(20px,env(safe-area-inset-top)) 24px max(100px,calc(env(safe-area-inset-bottom) + 92px));gap:14px;animation:none}
+.duo-heading{color:#e8dcc4;font-family:"Yuji Syuku",serif;text-align:center;letter-spacing:.35em;font-size:20px;flex:none;animation:lit-reveal .5s ease both}
+.duo-pages{display:grid;grid-template-columns:repeat(var(--count),minmax(0,1fr));gap:2px;flex:1;min-height:0;box-shadow:0 12px 28px #0003}
+.duo-page{position:relative;isolation:isolate;min-width:0;background:var(--lit-paper);color:var(--lit-ink);padding:18px 14px;display:flex;flex-direction:column;align-items:center;justify-content:center;animation:lit-page .7s ease var(--page-delay) both}
+.duo-page>*:not(.literary-scene){position:relative;z-index:1}
+.duo-portrait{width:min(100%,180px);height:clamp(70px,21vh,180px);flex-shrink:1;min-height:0;display:grid;place-items:center}
+.duo-portrait .author-motif{width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 6px 3px #362b1c18)}
+.literary-cut .dk-name{margin:12px 0 6px;color:var(--lit-ink);font-size:clamp(12px,3vw,16px);font-weight:600;text-shadow:none;letter-spacing:.12em;animation:none;text-align:center}
+.literary-cut .dk-title{writing-mode:horizontal-tb;font-family:"Yuji Syuku",serif;color:var(--lit-ink);font-size:clamp(18px,4.3vw,32px);font-weight:400;line-height:1.5;text-align:center;text-shadow:none;overflow-wrap:anywhere;margin:0;animation:none}
+.literary-cut .dk-rb{position:relative;inset:auto;transform:none;flex:none;padding:10px 50px;background:transparent;border-block:1px solid #a9957280;box-shadow:none;animation:lit-reveal .6s ease .6s both}
+.literary-cut .dk-rb small{font-family:"Klee One",serif;font-size:11px;font-weight:600;letter-spacing:.15em;color:#c2b496;text-shadow:none}
+.literary-cut .dk-rb b{font-size:clamp(22px,5.5vw,40px);font-weight:400;line-height:1.5;color:#f1e7d0;text-shadow:none;overflow-wrap:anywhere}
+.literary-cut .dk-seal{position:absolute;right:0;top:50%;width:42px;height:42px;transform:translateY(-50%) rotate(-6deg);background:none;border:3px double #c57b6a;border-radius:2px;box-shadow:none;color:#dd9d8e;font-size:15px;writing-mode:vertical-rl;letter-spacing:.1em;animation:lit-seal .4s ease .95s both}
+.literary-cut .dk-say{position:relative;inset:auto;flex:none;width:100%;max-width:740px;padding:0 4px;background:none;border:0;border-radius:0;box-shadow:none;animation:lit-reveal .7s ease .85s both}
+.literary-cut .dk-say .who{color:#cbbb99;font-size:12px;font-weight:600;letter-spacing:.04em;margin-bottom:5px;flex-wrap:wrap}
+.literary-cut .dk-say .who em{color:#e0ad94}
+.literary-cut .dk-say .txt{font-size:clamp(13px,3.8vw,19px);color:#f1e7d0;line-height:1.8}
+.literary-cut .dk-say .reg{font-size:11px;color:#b6ab92;margin-top:5px}
+.literary-cut.r4::after,.literary-cut.r5::after{display:none}
+/* Ordinary skills are brief title leaves above the brush impact. */
+.skill{top:clamp(20px,5vh,70px);left:18px;right:18px;max-width:720px;margin:auto;padding:18px 24px 22px;isolation:isolate;background:var(--lit-paper);color:var(--lit-ink);border:1px solid #a99572;box-shadow:0 8px 40px #0003;animation:lit-reveal .45s ease both}
+.skill>*:not(.literary-scene){position:relative;z-index:1}
+.skill .sauthor{color:var(--lit-ink);text-shadow:none;font-size:14px;font-weight:600;margin:0 0 8px}
+.skill .sauthor .author-motif{width:60px;height:60px}
+.skill .sname{font-size:clamp(24px,7vw,48px);font-weight:400;color:var(--lit-ink);line-height:1.4;text-shadow:none;animation:lit-reveal .5s ease .1s both}
+.skill .squote{font-size:clamp(13px,3.6vw,18px);color:var(--lit-ink);text-shadow:none;margin-top:8px;line-height:1.7;animation:lit-reveal .6s ease .2s both}
+.literary-strike{--stroke-ink:#292f2d;--stroke-accent:#98473d;position:absolute;inset:0;color:#f5e7cc;font-family:"Yuji Syuku",serif;animation:lit-hit 1700ms ease both}
+.brush-stroke{position:absolute;left:15%;top:58%;width:70%;height:clamp(14px,3vh,26px);background:var(--stroke-ink);transform:rotate(-16deg);clip-path:polygon(0 42%,9% 22%,46% 4%,86% 20%,100% 48%,91% 64%,52% 91%,12% 80%,25% 60%);animation:lit-brush .4s cubic-bezier(.2,.7,.3,1) both}
+.brush-stroke.second{top:59%;height:8px;background:var(--stroke-accent);transform:rotate(-9deg);animation-delay:.15s}
+.strike-glyph{position:absolute;left:50%;top:58%;transform:translate(-50%,-50%) rotate(-8deg);font-size:clamp(64px,19vw,110px);line-height:1;color:#f5e7cc;text-shadow:1px 2px #202724;animation:lit-reveal .35s ease .12s both}
+.strike-caption{position:absolute;top:72%;left:16px;right:16px;text-align:center;font-family:"Klee One",serif;font-size:14px;font-weight:600;letter-spacing:.05em;text-shadow:0 1px 4px #000;animation:lit-reveal .4s ease .2s both}
+.strike-damage{position:absolute;left:50%;top:43%;transform:translate(-50%,-50%);font-size:48px;line-height:1;text-shadow:0 2px 6px #0008}
+.strike-damage small{display:block;text-align:center;margin-top:6px;font-family:"Klee One",serif;font-size:11px;letter-spacing:.2em}
+.is-critical .strike-damage{color:#ead09a}
+@keyframes lit-reveal{from{opacity:0;translate:0 10px}to{opacity:1;translate:0 0}}
+@keyframes lit-page{from{opacity:0;translate:0 18px}to{opacity:1;translate:0 0}}
+@keyframes lit-seal{from{opacity:0;scale:1.15}to{opacity:1;scale:1}}
+@keyframes lit-brush{from{opacity:0;clip-path:polygon(0 42%,0 22%,0 4%,0 20%,0 48%,0 64%,0 91%,0 80%,0 60%)}to{opacity:1}}
+@keyframes lit-hit{0%{opacity:0}12%,65%{opacity:1}100%{opacity:0}}
+@media(max-width:480px){
+  .literary-cut .dk-in{padding-inline:14px;gap:10px}
+  .duo-page{padding:18px 10px}
+  .literary-cut .spk-in{inset-inline:12px}
+  .literary-cut .spk-core{padding-inline:20px}
+  .duo-pages[style*="3"] .dk-title{font-size:18px}
+  .duo-pages[style*="3"] .dk-name{font-size:11px;letter-spacing:0}
+}
+@media(max-height:620px){
+  .literary-cut .spk-core{padding-block:16px}
+  .spk-portrait{width:110px;height:110px;flex:none;margin:8px 0}
+  .literary-cut .spk-title{font-size:26px;margin-top:6px}
+  .literary-cut .spk-quote{font-size:13px;margin-top:6px;line-height:1.6}
+  .literary-cut .spk-note{margin-top:10px}
+  .literary-cut .dk-in{gap:8px;padding-top:12px}
+  .duo-heading{font-size:16px}.duo-page{padding:12px}
+  .duo-portrait{height:64px;flex:none}.literary-cut .dk-title{font-size:18px}
+  .literary-cut .dk-name{margin:4px 0;font-size:11px}
+  .literary-cut .dk-rb{padding-block:6px}.literary-cut .dk-rb b{font-size:22px}
+  .literary-cut .dk-say .txt{font-size:13px;line-height:1.6}
+  .skill{padding:12px 20px}.skill .sauthor .author-motif{width:40px;height:40px}.skill .sname{font-size:26px}
+}
+/* Short landscape viewports may scroll the leaf, keeping the continue button free. */
+@media(max-height:450px){
+  .literary-cut .spk-in,.literary-cut .dk-in{overflow-y:auto;pointer-events:auto}
+  .literary-cut .spk-core{height:auto;min-height:100%}
+  .duo-pages{flex:none;min-height:160px}
+}
+@media(prefers-reduced-motion:reduce){
+  .literary-cut,.literary-cut *,.skill,.skill *,.literary-strike,.literary-strike *{animation:none!important;transition:none!important;translate:none;scale:none}
+  .literary-cut,.literary-cut .spk-quote,.skill .squote{opacity:1}
+}
+/* Wide, shallow screens use a two-column composition instead of stacking. */
+@media(min-width:600px) and (max-height:450px){
+  .literary-cut .spk-core{display:grid;grid-template-columns:32% minmax(0,1fr);grid-template-rows:auto auto auto auto auto;align-content:center;column-gap:24px;padding:18px 30px;text-align:center;overflow-wrap:anywhere}
+  .spk-portrait{grid-column:1;grid-row:1 / 6;width:100%;height:160px;max-height:100%;margin:0}
+  .literary-cut .spk-tag{grid-column:2;justify-self:center;font-size:16px;padding-block:0}
+  .literary-cut .spk-who{grid-column:2;margin-top:6px;font-size:12px}
+  .literary-cut .spk-title{grid-column:2;font-size:24px;margin-top:6px}
+  .literary-cut .spk-quote{grid-column:2;margin-top:6px;font-size:12px}
+  .literary-cut .spk-note{grid-column:2;margin-top:8px;padding:4px;font-size:10px}
+  .literary-cut .dk-in{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:auto auto minmax(0,1fr);column-gap:20px;row-gap:10px;overflow:hidden}
+  .duo-heading{grid-column:1 / 3}
+  .duo-pages{grid-column:1;grid-row:2 / 4;min-height:0}
+  .duo-portrait{height:62px}.duo-page{padding:12px 8px}
+  .literary-cut .dk-rb{grid-column:2;grid-row:2;padding-inline:44px}
+  .literary-cut .dk-rb b{font-size:21px}.literary-cut .dk-rb small{font-size:10px}
+  .literary-cut .dk-say{grid-column:2;grid-row:3;overflow:auto;pointer-events:auto;align-self:start;max-height:100%}
+  .literary-cut .dk-say .txt{font-size:12px}
+  .skill{left:18px;right:auto;width:45%;max-height:calc(100% - 40px);overflow:auto}
+  .literary-strike{left:50%}.strike-damage{font-size:36px}.strike-caption{top:78%;font-size:12px}
+}
+@media(min-height:451px) and (max-height:620px){.strike-damage{top:48%}}
+@media(min-width:600px) and (max-height:450px){.skill{pointer-events:auto}}

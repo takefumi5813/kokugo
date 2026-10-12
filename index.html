@@ -778,6 +778,7 @@ body[data-screen="home"]>.wrap{background:none;border:0;box-shadow:none;max-widt
 @media(max-width:600px){.quest{padding:13px 14px;margin-bottom:18px}.quest .qtitle{font-size:15px}}
 @media(prefers-reduced-motion:reduce){.quest .qbar i{transition:none}.qclear,.qclear .qbig,.qclear .qitems div{animation:fadeonly 900ms forwards}}
 </style>
+<link rel="stylesheet" href="assets/styles/literary-effects.css">
 </head>
 <body data-screen="opening">
 <section id="opening" aria-labelledby="opening-title">
@@ -1062,16 +1063,17 @@ body[data-screen="home"]>.wrap{background:none;border:0;box-shadow:none;max-widt
   };
   function attackFx(job, dmg, crit){
     var a = ACT[job.fx] || ACT.stick;
-    var el = document.createElement('div');
-    if (a[0][1] === 'swing'){ el.className = 'glyph swing'; el.textContent = a[0][0]; fx.appendChild(el);
-      var s1 = document.createElement('i'); s1.className = 'slash'; fx.appendChild(s1);
-      if (job.t >= 3){ var s2 = document.createElement('i'); s2.className = 'slash two'; s2.style.setProperty('--ang','35deg'); fx.appendChild(s2); } }
-    else if (a[0][1] === 'ring'){ el.className = 'ring'; el.style.setProperty('--c', job.fx === 'dark' ? '#5a2aa6' : job.fx === 'heal' || job.fx === 'holy' ? '#ffd54a' : '#4fc0bd'); fx.appendChild(el);
-      var g = document.createElement('div'); g.className = 'glyph'; g.textContent = a[0][0]; fx.appendChild(g); }
-    else { el.className = a[0][1]; el.textContent = a[0][0]; fx.appendChild(el);
-      if (a[0][1] === 'multi'){ var g2 = document.createElement('div'); g2.className = 'multi'; g2.style.animationDelay = '300ms'; g2.textContent = a[0][0]; fx.appendChild(g2); } }
-    var act = document.createElement('div'); act.className = 'act'; act.textContent = (crit ? '会心の一撃! ' : '') + a[1]; fx.appendChild(act);
-    var d = document.createElement('div'); d.className = 'dmg' + (crit ? ' crit' : ''); d.textContent = dmg; fx.appendChild(d);
+    var theme = literaryTheme(job.fx);
+    var hit = el('div', 'literary-strike' + (crit ? ' is-critical' : ''));
+    hit.style.setProperty('--stroke-ink', theme.ink);
+    hit.style.setProperty('--stroke-accent', theme.accent);
+    hit.appendChild(el('i', 'brush-stroke'));
+    if (job.t >= 3) hit.appendChild(el('i', 'brush-stroke second'));
+    hit.appendChild(el('span', 'strike-glyph', a[0][0]));
+    var act = el('div', 'strike-caption', (crit ? '会心の一筆 · ' : '') + a[1]);
+    var damage = el('div', 'strike-damage', String(dmg));
+    damage.appendChild(el('small', null, crit ? '会心' : '一筆'));
+    hit.appendChild(act); hit.appendChild(damage); fx.appendChild(hit);
   }
   function celebrate(combo, gained, rankUp, L2){
     clearFx();
@@ -2045,160 +2047,72 @@ body[data-screen="home"]>.wrap{background:none;border:0;box-shadow:none;max-widt
     pirate:    ['sea',    'linear-gradient(180deg,#14324a,#05121e)', '#bfe9ff', [392, 494, 587, 784]],
     hero:      ['sunrise','linear-gradient(180deg,#2a2040 0%,#6a3424 60%,#d07a3a 100%)', '#ffe3a0', [523, 659, 784, 1047, 1319]]
   };
-  function rnd(a, b){ return a + Math.random() * (b - a); }
-  function spkPart(layer, cls, vars, txt){
-    var n = document.createElement('i'); n.className = cls;
-    for (var k in vars) n.style.setProperty('--' + k, vars[k]);
-    if (txt) n.textContent = txt;
-    layer.appendChild(n); return n;
-  }
   function spkSvg(layer, cls, inner, vb){
     var s = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
     s.setAttribute('viewBox', vb || '0 0 100 100'); s.setAttribute('class', cls);
     if (!vb) s.setAttribute('preserveAspectRatio', 'none');
     s.innerHTML = inner; layer.appendChild(s); return s;
   }
-  var SPKSCENE = {
-    slash: function(L, root, ac){
-      root.classList.add('shk');
-      [[-28, 40, .30], [24, 52, .48], [-8, 46, .66], [62, 50, .84]].forEach(function(a){
-        spkPart(L, 'spk-sl', {a:a[0] + 'deg', y:a[1] + '%', d:a[2] + 's', c:ac, h:'10px'});
-      });
-    },
-    fire: function(L, root, ac){
-      SPKSCENE.slash(L, root, '#ff9a3a');
-      for (var i = 0; i < 34; i++) spkPart(L, 'spk-rise', {x:rnd(0, 100) + '%', s:rnd(8, 22) + 'px', c:pick(['#ffb04a', '#ff6a2a', '#ffe08a']),
-        t:rnd(1.6, 3) + 's', d:rnd(0, 1.6) + 's', dx:rnd(-60, 60) + 'px', r:rnd(-90, 90) + 'deg'}, '●');
-    },
-    orbs: function(L){
-      for (var i = 0; i < 18; i++) spkPart(L, 'spk-orb', {x:rnd(2, 92) + '%', s:rnd(26, 80) + 'px', c:pick(['#ffcf6a', '#ff9e5a', '#ffe9a8']),
-        t:rnd(2.6, 3.8) + 's', d:rnd(0, 1.2) + 's', dx:rnd(-40, 40) + 'px', r:'0deg'});
-    },
-    light: function(L, root, ac){
-      spkPart(L, 'spk-rays', {rc:'rgba(255,240,180,.26)'});
-      for (var i = 0; i < 30; i++) spkPart(L, 'spk-rise', {x:rnd(0, 100) + '%', s:rnd(12, 30) + 'px', c:ac,
-        t:rnd(2, 3.4) + 's', d:rnd(0, 1.4) + 's', dx:rnd(-30, 30) + 'px', r:rnd(-180, 180) + 'deg'}, pick(['✦', '✧', '❋']));
-    },
-    wind: function(L){
-      for (var i = 0; i < 26; i++) spkPart(L, 'spk-wind', {y:rnd(5, 95) + '%', w:rnd(18, 50) + 'vw', t:rnd(.5, .9) + 's', d:rnd(0, 2.4) + 's'});
-      for (var j = 0; j < 12; j++) spkPart(L, 'spk-leaf', {y:rnd(10, 90) + '%', dy:rnd(-30, 30) + 'vh', t:rnd(.9, 1.5) + 's', d:rnd(.2, 2.2) + 's'});
-    },
-    impact: function(L, root, ac){
-      root.classList.add('shk');
-      spkPart(L, 'spk-speed', {});
-      [.42, .58, .9].forEach(function(d){ spkPart(L, 'spk-wave', {c:ac, d:d + 's'}); });
-    },
-    arrows: function(L){
-      for (var i = 0; i < 12; i++) spkPart(L, 'spk-arrow', {y:rnd(8, 92) + '%', a:rnd(-14, -4) + 'deg', d:(0.15 + i * 0.16 + rnd(0, .08)) + 's'});
-    },
-    dragon: function(L, root, ac){
-      spkSvg(L, 'spk-svg', '<path class="spk-draw" pathLength="100" d="M-10 85 C 15 20, 35 95, 55 45 S 85 5, 110 28" fill="none" stroke="' + ac +
-        '" stroke-width="5" stroke-linecap="round" style="filter:drop-shadow(0 0 2px ' + ac + ')"/>' +
-        '<path class="spk-draw" pathLength="100" d="M-10 85 C 15 20, 35 95, 55 45 S 85 5, 110 28" fill="none" stroke="#fff8d8" stroke-width="1.4" stroke-linecap="round" style="--d:.25s"/>');
-      for (var i = 0; i < 7; i++) spkPart(L, 'spk-cloud', {x:rnd(-10, 80) + '%', y:rnd(5, 85) + '%', s:rnd(30, 60) + 'vw', d:rnd(0, .8) + 's'});
-    },
-    shadow: function(L, root, ac, size, title){
-      [-38, 38, -20, 20].forEach(function(dx, i){ spkPart(L, 'spk-ghost', {s:size + 'px', dx:dx + 'vw', d:(0.35 + i * 0.12) + 's'}, title); });
-      for (var i = 0; i < 9; i++) spkPart(L, 'spk-shur', {x:rnd(10, 50) + '%', y:rnd(10, 90) + '%', d:rnd(.2, 2) + 's'}, '✦');
-    },
-    notes: function(L, root, ac){
-      for (var i = 0; i < 26; i++) spkPart(L, 'spk-rise', {x:rnd(0, 96) + '%', s:rnd(22, 46) + 'px', c:pick([ac, '#fff', '#b8d8ff']),
-        t:rnd(2.2, 3.4) + 's', d:rnd(0, 1.6) + 's', dx:rnd(-80, 80) + 'px', r:rnd(-40, 40) + 'deg'}, pick(['♪', '♫', '♩', '♬']));
-    },
-    coins: function(L){
-      for (var i = 0; i < 32; i++){
-        var c = spkPart(L, 'spk-fall', {x:rnd(0, 96) + '%', t:rnd(1.4, 2.4) + 's', d:rnd(0, 1.8) + 's', dx:rnd(-30, 30) + 'px', r:'0deg'});
-        var s = rnd(22, 40), coin = document.createElement('b'); coin.className = 'spk-coin'; coin.style.setProperty('--s', s + 'px');
-        coin.style.position = 'relative'; c.appendChild(coin); coin.classList.add('spk-coinsp');
-        coin.style.width = coin.style.height = s + 'px';
-      }
-    },
-    petals: function(L){
-      for (var i = 0; i < 40; i++){
-        var c = spkPart(L, 'spk-fall', {x:rnd(-10, 100) + '%', t:rnd(2.4, 3.6) + 's', d:rnd(0, 1.4) + 's', dx:rnd(-30, 40) + 'vw', r:rnd(360, 900) + 'deg'});
-        var p = document.createElement('b'); p.className = 'spk-petal'; p.style.setProperty('--s', rnd(14, 26) + 'px'); p.style.position = 'relative'; c.appendChild(p);
-      }
-    },
-    ink: function(L){
-      for (var i = 0; i < 7; i++) spkPart(L, 'spk-ink', {x:rnd(5, 95) + '%', y:rnd(5, 95) + '%', s:rnd(40, 80) + 'vmax', d:(i * 0.12) + 's'});
-      spkPart(L, 'spk-moon', {});
-      for (var j = 0; j < 22; j++) spkPart(L, 'spk-tw', {x:rnd(0, 100) + '%', y:rnd(0, 60) + '%', d:rnd(.6, 2) + 's'});
-    },
-    clock: function(L, root, ac){
-      var ticks = '';
-      for (var i = 0; i < 60; i++){ var a = i * 6 * Math.PI / 180, r1 = i % 5 ? 45 : 41;
-        ticks += '<line x1="' + (50 + Math.sin(a) * r1).toFixed(2) + '" y1="' + (50 - Math.cos(a) * r1).toFixed(2) + '" x2="' + (50 + Math.sin(a) * 48).toFixed(2) + '" y2="' + (50 - Math.cos(a) * 48).toFixed(2) + '" stroke="' + ac + '" stroke-width="' + (i % 5 ? .4 : 1.1) + '"/>'; }
-      spkSvg(L, 'spk-spin', '<circle cx="50" cy="50" r="48.5" fill="none" stroke="' + ac + '" stroke-width=".6" opacity=".7"/>' + ticks, '0 0 100 100');
-      spkSvg(L, 'spk-spin rev', '<circle cx="50" cy="50" r="47" fill="none" stroke="' + ac + '" stroke-width=".8" stroke-dasharray="2 3" opacity=".6"/>' +
-        '<line class="spk-hand" style="--t:3.6s;--r:1440deg" x1="50" y1="50" x2="50" y2="8" stroke="#fff" stroke-width="1.2" stroke-linecap="round"/>' +
-        '<line class="spk-hand" style="--t:3.6s;--r:120deg" x1="50" y1="50" x2="50" y2="22" stroke="' + ac + '" stroke-width="2.2" stroke-linecap="round"/>', '0 0 100 100');
-    },
-    circle: function(L, root, ac){
-      var star = '', glyphs = '';
-      for (var i = 0; i < 6; i++){ var a = i * 60 * Math.PI / 180; star += (i ? ' ' : '') + (50 + Math.sin(a) * 40).toFixed(2) + ',' + (50 - Math.cos(a) * 40).toFixed(2); }
-      var p = star.split(' '), tri1 = [p[0], p[2], p[4]].join(' '), tri2 = [p[1], p[3], p[5]].join(' ');
-      var G = '幻夢影星月風火水雷光闇言';
-      for (var j = 0; j < 12; j++){ var b = j * 30; glyphs += '<text x="50" y="7.6" font-size="4.6" fill="' + ac + '" text-anchor="middle" transform="rotate(' + b + ' 50 50)" font-family="Yuji Syuku,serif">' + G[j] + '</text>'; }
-      spkSvg(L, 'spk-spin', '<g style="filter:drop-shadow(0 0 1.2px ' + ac + ')" fill="none" stroke="' + ac + '" stroke-width=".7">' +
-        '<circle cx="50" cy="50" r="48"/><circle cx="50" cy="50" r="41"/><polygon points="' + tri1 + '"/><polygon points="' + tri2 + '"/><circle cx="50" cy="50" r="20"/></g>' + glyphs, '0 0 100 100');
-      for (var k = 0; k < 20; k++) spkPart(L, 'spk-rise', {x:rnd(15, 85) + '%', s:rnd(10, 20) + 'px', c:ac, t:rnd(1.8, 3) + 's', d:rnd(.3, 1.6) + 's', dx:rnd(-20, 20) + 'px', r:'0deg'}, '✧');
-    },
-    claw: function(L, root){
-      root.classList.add('shk');
-      [26, 42, 58].forEach(function(x, i){ spkPart(L, 'spk-claw', {x:x + '%', d:(0.4 + i * 0.07) + 's'}); });
-    },
-    dream: function(L, root, ac){
-      for (var i = 0; i < 20; i++) spkPart(L, 'spk-bub', {x:rnd(0, 94) + '%', s:rnd(24, 90) + 'px', t:rnd(2.6, 3.8) + 's', d:rnd(0, 1.4) + 's', dx:rnd(-60, 60) + 'px', r:'0deg'});
-      for (var j = 0; j < 24; j++) spkPart(L, 'spk-tw', {x:rnd(0, 100) + '%', y:rnd(0, 100) + '%', d:rnd(0, 2) + 's'});
-    },
-    sea: function(L){
-      var sea = document.createElement('b'); sea.className = 'spk-sea'; L.appendChild(sea);
-      var wave = 'M0 30 Q 12.5 10 25 30 T 50 30 T 75 30 T 100 30 T 125 30 T 150 30 T 175 30 T 200 30 V 100 H 0 Z';
-      spkSvg(sea, '', '<path d="' + wave + '" fill="#2a6f9a" opacity=".85"/><path d="M0 30 Q 12.5 10 25 30 T 50 30 T 75 30 T 100 30 T 125 30 T 150 30 T 175 30 T 200 30" fill="none" stroke="#e8f8ff" stroke-width="1.6"/>', '0 0 200 100').setAttribute('preserveAspectRatio', 'none');
-      spkSvg(sea, '', '<path d="' + wave + '" fill="#4fa0c8" opacity=".7"/>', '0 0 200 100').setAttribute('preserveAspectRatio', 'none');
-      for (var i = 0; i < 22; i++) spkPart(L, 'spk-rise', {x:rnd(0, 100) + '%', s:rnd(6, 14) + 'px', c:'#e8f8ff', t:rnd(1, 1.8) + 's', d:rnd(.4, 2.2) + 's', dx:rnd(-40, 40) + 'px', r:'0deg'}, '●');
-    },
-    sunrise: function(L){
-      spkPart(L, 'spk-sun', {});
-      spkPart(L, 'spk-rays', {rc:'rgba(255,200,120,.25)'});
-      for (var i = 0; i < 14; i++) spkPart(L, 'spk-rise', {x:rnd(0, 100) + '%', s:rnd(10, 20) + 'px', c:'#ffe3a0', t:rnd(2.2, 3.2) + 's', d:rnd(.4, 1.6) + 's', dx:rnd(-20, 20) + 'px', r:'0deg'}, '✦');
-    }
-  };
+  // Muted pigments shared by the cut-ins and the existing woodcut-style motifs.
+  function literaryTheme(name){
+    var group = {
+      dark:'night', ninja:'night', fool:'night', summon:'night',
+      pirate:'water', time:'water', arrow:'water',
+      dance:'petal', sing:'petal', heal:'leaf', steal:'leaf', dragon:'leaf',
+      magicslash:'ember', beast:'ember', samurai:'ember',
+      holy:'light', hero:'light', coin:'light'
+    }[name] || 'script';
+    var colors = {
+      night:['#292d40','#766580','#ede6df'], water:['#233d43','#4c7577','#e7ece5'],
+      petal:['#4b3037','#a05c60','#f2e5dc'], leaf:['#2c4037','#657b5a','#e9ecdf'],
+      ember:['#492f29','#9b4637','#f0e2cf'], light:['#41382b','#a38141','#f3e9ce'],
+      script:['#292f2d','#98473d','#eee5d3']
+    }[group];
+    return {ink:colors[0], accent:colors[1], paper:colors[2], scene:group};
+  }
+  function literarySurface(node, name){
+    var t = literaryTheme(name);
+    node.style.setProperty('--lit-ink', t.ink);
+    node.style.setProperty('--lit-accent', t.accent);
+    node.style.setProperty('--lit-paper', t.paper);
+    node.dataset.scene = t.scene;
+    var art = el('div', 'literary-scene');
+    // Linework stays at the edges, leaving the motif and the text in clear space.
+    var shapes = '<circle cx="78" cy="24" r="16"/><circle cx="78" cy="24" r="20" stroke-dasharray=".4 2.4"/>';
+    if (t.scene === 'water') shapes = [0,8,16,24].map(function(y){
+      return '<path d="M-10 ' + (65+y) + ' Q15 ' + (42+y) + ' 40 ' + (65+y) + ' T90 ' + (65+y) + ' T140 ' + (65+y) + '"/>';
+    }).join('');
+    if (t.scene === 'petal' || t.scene === 'leaf') shapes = '<path d="M75 110 Q60 50 104 6"/>' + [0,1,2,3,4].map(function(i){
+      return '<path d="M' + (73+i*4) + ' ' + (80-i*13) + ' q-28 -26 -24 -35 q26 5 24 35 m0 0 q26 -18 32 -37 q-27 1 -32 37"/>';
+    }).join('');
+    if (t.scene === 'night') shapes += '<path d="M84 9 A18 18 0 1 0 95 40 A22 22 0 0 1 84 9Z"/><path d="M12 27h6m-3 -3v6 M31 13h4m-2 -2v4 M20 46h4m-2 -2v4"/>';
+    if (t.scene === 'ember') shapes = '<path d="M75 110 Q95 77 77 54 Q82 77 62 86 Q70 66 54 45 Q62 80 38 110 M55 110 Q68 91 64 81"/>';
+    if (t.scene === 'script') shapes = '<path d="M68 -10V110 M78 -10V110 M88 -10V110 M98 -10V110 M58 17H110 M58 27H110 M58 37H110 M58 47H110 M58 57H110 M58 67H110 M58 77H110 M58 87H110"/>';
+    spkSvg(art, '', '<g fill="none" stroke="currentColor" stroke-width=".45">' + shapes + '</g>').setAttribute('preserveAspectRatio', 'xMidYMid slice');
+    node.appendChild(art);
+  }
   // s = {b:文豪, w:[id, 作品名, 一言, fx]}
   function sparkFx(s, more, label){
-    var fxName = s.w[3] || 'stick', T = SPKT[fxName] || SPKT.stick, glyph = (ACT[fxName] || ACT.stick)[0][0];
-    var title = '『' + s.w[1] + '』', len = title.length;
-    var vw = Math.min(window.innerWidth || 380, 900);
-    var lines = len > 13 ? 2 : 1;
-    var size = Math.max(30, Math.min(132, Math.floor((vw - 28) * 0.94 / (Math.ceil(len / lines) + 0.4))));
-    var root = el('div', 'spk');
-    root.style.setProperty('--bg', T[1]); root.style.setProperty('--ac', T[2]); root.style.setProperty('--dur', SPARK_MS + 'ms');
-    var inner = el('div', 'spk-in');
-    inner.appendChild(el('div', 'spk-bg'));
-    inner.appendChild(el('div', 'spk-glyph', glyph));
-    var L = el('div', 'spk-fxl'); inner.appendChild(L);
+    var fxName = s.w[3] || 'stick', T = SPKT[fxName] || SPKT.stick;
+    var root = el('div', 'spk literary-cut');
+    root.style.setProperty('--dur', SPARK_MS + 'ms');
+    var inner = el('div', 'spk-in'); literarySurface(inner, fxName);
     var core = el('div', 'spk-core');
-    core.appendChild(el('div', 'spk-tag', label || '閃いた！'));
-    var who = el('div', 'spk-who'); who.appendChild(authorIcon(s.b, 92));
-    who.appendChild(el('span', null, s.b.n + (more ? '（ほか' + more + '人）' : '')));
-    core.appendChild(who);
-    var h = el('div', 'spk-title', title); h.style.fontSize = size + 'px'; core.appendChild(h);
+    core.appendChild(el('div', 'spk-tag', label || '閃き'));
+    var portrait = el('div', 'spk-portrait'); portrait.appendChild(authorIcon(s.b, 220));
+    core.appendChild(portrait);
+    core.appendChild(el('div', 'spk-who', s.b.n + (more ? '（ほか' + more + '人）' : '')));
+    core.appendChild(el('div', 'spk-title', '『' + s.w[1] + '』'));
     if (s.w[2]) core.appendChild(el('div', 'spk-quote', s.w[2]));
-    core.appendChild(el('div', 'spk-note', '新しい技を覚えた！'));
-    inner.appendChild(core);
-    root.appendChild(inner);
-    root.appendChild(el('div', 'spk-flash'));
-    try { (SPKSCENE[T[0]] || SPKSCENE.slash)(L, root, T[2], size, title); } catch(e){}
-    fx.classList.add('dim');
-    fx.appendChild(root);
-    tone([1568, 2093, 2637], 0.06, 'sine');
+    core.appendChild(el('div', 'spk-note', '新しい技を、手帖に記した。'));
+    inner.appendChild(core); root.appendChild(inner);
+    fx.classList.add('dim'); fx.appendChild(root);
+    tone([784, 1047], 0.06, 'sine');
     setTimeout(function(){ tone(T[3], 0.12); }, 450);
-    setTimeout(function(){ tone([T[3][T[3].length - 1] * 2], 0.4, 'sine'); }, 1550);
     return SPARK_MS;
   }
   // ===== 掛け合い全画面演出 =====
-  // 組み合わせた作品それぞれの閃きの場面（炎・海・夜・桜…）を斜めに割って並べ、
-  // 中央でぶつけたあと、関係の名前を朱の帯で打ち込み、台詞を一文字ずつ語らせる。
+  // 作品ごとの色と文豪モチーフを、見開きのページとして並べる。
   var DUO_REL = [
     [/反目|論争|文体|決闘|恨み|魂の取引|負け惜しみ|笑えない|同じ宮中/, 'clash'],
     [/師弟|親友|盟友|双璧|無頼派|蕉門|新感覚派|あこがれ|同じ年|友情|歩いて|歌う仲間|同じ作者|系譜|集結|三大随筆|日記文学|随筆|同じ書物/, 'bond']
@@ -2425,97 +2339,36 @@ body[data-screen="home"]>.wrap{background:none;border:0;box-shadow:none;max-widt
   }
   function duoFx(c, isNew, dmg){
     var ws = c.k.map(function(k){ return WORK[k]; });
-    var n = ws.length, solo = c.r === 5, trio = !solo && n >= 3;
-    var tier = solo ? 'ひとり技' : trio ? '三重奏' : '掛け合い';
-    var rname = solo ? c.n.replace(/^ひとり技・/, '') : c.n;
-    var rel = 'echo';
-    if (!solo) for (var ri = 0; ri < DUO_REL.length; ri++) if (DUO_REL[ri][0].test(c.n)){ rel = DUO_REL[ri][1]; break; }
-    var vw = Math.min(window.innerWidth || 380, 900), vh = window.innerHeight || 700;
-    var MS = (solo || trio) ? 5300 : 4800, slant = 7;
-    var root = el('div', 'dk r' + c.r + (solo ? ' solo' : ''));
+    var solo = c.r === 5, trio = !solo && ws.length >= 3;
+    var MS = (solo || trio) ? 5300 : 4800;
+    var root = el('div', 'dk literary-cut r' + c.r + (solo ? ' solo' : ''));
     root.style.setProperty('--dur', MS + 'ms');
-    var inner = el('div', 'dk-in'); root.appendChild(inner);
-
-    // 1) 作品ごとの帯：その作品の閃きの背景と粒子をそのまま使う（組み合わせごとに画面の色と景色が変わる）
+    var inner = el('div', 'dk-in');
+    var heading = el('div', 'duo-heading', solo ? 'ひとり技' : trio ? '三重奏' : '掛け合い');
+    inner.appendChild(heading);
+    var pages = el('div', 'duo-pages'); pages.style.setProperty('--count', ws.length);
     ws.forEach(function(w, i){
-      var T = SPKT[w.fx] || SPKT.stick;
-      var xl = i === 0 ? -20 : 100 * i / n, xr = i === n - 1 ? 120 : 100 * (i + 1) / n;
-      var band = el('div', 'dk-band');
-      band.style.setProperty('--cp', 'polygon(' + (xl + slant) + '% 0,' + (xr + slant) + '% 0,' + (xr - slant) + '% 100%,' + (xl - slant) + '% 100%)');
-      band.style.setProperty('--bg', T[1]); band.style.setProperty('--ac', T[2]);
-      band.style.setProperty('--from', i === 0 ? 'translate(-105%,0)' : i === n - 1 ? 'translate(105%,0)' : 'translate(0,-105%)');
-      band.style.setProperty('--wd', (i * 0.06) + 's');
-      var L = el('div', 'spk-fxl'); band.appendChild(L);
-      try { (SPKSCENE[T[0]] || SPKSCENE.slash)(L, root, T[2], 40, '『' + w.t + '』'); } catch(e){}
-
-      var col = el('div', 'dk-col' + (solo && i !== 1 ? ' nof' : ''));
-      col.style.setProperty('--cx', ((i + .5) * 100 / n) + '%');
-      if (!solo || i === 1){
-        var face = el('div', 'dk-face');
-        face.style.setProperty('--sx', i === 0 ? '-70vw' : i === n - 1 ? '70vw' : '0px');
-        face.style.setProperty('--sy', (i > 0 && i < n - 1) ? '-40vh' : '0px');
-        face.style.setProperty('--fd', (.2 + i * .08) + 's');
-        face.appendChild(authorIcon(w.b, solo ? 150 : 108)); col.appendChild(face);
-        col.appendChild(el('div', 'dk-name', w.b.n));
-      }
-      var t = '『' + w.t + '』', len = t.length, lines = len > 9 ? 2 : 1, per = Math.ceil(len / lines);
-      var fs = Math.max(18, Math.min(vw * (n >= 3 ? 0.085 : 0.11), 56, vh * 0.34 / per));
-      var h = el('div', 'dk-title', t); h.style.fontSize = fs + 'px'; h.style.maxHeight = (per * fs * 1.15 + 4) + 'px';
-      h.style.setProperty('--td', (.6 + i * .15) + 's');
-      col.appendChild(h); band.appendChild(col); inner.appendChild(band);
+      var page = el('div', 'duo-page'); literarySurface(page, w.fx);
+      page.style.setProperty('--page-delay', (.12 + i * .12) + 's');
+      var portrait = el('div', 'duo-portrait'); portrait.appendChild(authorIcon(w.b, 180));
+      page.appendChild(portrait); page.appendChild(el('div', 'dk-name', w.b.n));
+      page.appendChild(el('div', 'dk-title', '『' + w.t + '』'));
+      pages.appendChild(page);
     });
-
-    // 2) 境目の白い裂け目
-    var seam = '';
-    for (var s = 1; s < n; s++){ var x = 100 * s / n;
-      seam += '<line class="spk-draw" pathLength="100" x1="' + (x + slant) + '" y1="0" x2="' + (x - slant) + '" y2="100" stroke="#fff" stroke-width="1.1" style="--t:.5s;--d:.45s;filter:drop-shadow(0 0 6px #ffe9a8)"/>'; }
-    if (seam) spkSvg(inner, 'spk-svg dk-top', seam);
-
-    // 3) 関係の種類ごとの演出（反目＝斬り合い／結びつき＝金の糸／その他＝余韻）＋関係名の巨大な透かし
-    var X = el('div', 'spk-fxl dk-top'); inner.appendChild(X);
-    var wm = el('div', 'spk-glyph', rname.charAt(0)); wm.style.setProperty('--ac', '#fff'); X.appendChild(wm);
-    if (rel === 'clash'){
-      root.classList.add('shk');
-      [[-26, .95], [26, 1.05]].forEach(function(a){ spkPart(X, 'spk-sl', {a:a[0] + 'deg', y:'66%', d:a[1] + 's', c:'#ff6a4a', h:'12px'}); });
-      for (var i1 = 0; i1 < 26; i1++) spkPart(X, 'spk-rise', {x:rnd(0, 100) + '%', s:rnd(10, 24) + 'px', c:pick(['#ff6a4a', '#ffd27a', '#fff']),
-        t:rnd(1.4, 2.6) + 's', d:(.95 + rnd(0, 1.2)) + 's', dx:rnd(-60, 60) + 'px', r:rnd(-120, 120) + 'deg'}, '✦');
-    } else if (rel === 'bond'){
-      // 顔と顔のあいだを、金の糸で結ぶ
-      var ths = n >= 3 ? ['M29 10 C 33 2, 36 18, 40 10', 'M60 10 C 64 2, 67 18, 71 10'] : ['M38 10 C 44 1, 56 19, 62 10'], thSvg = '';
-      ths.forEach(function(th, ti){
-        thSvg += '<path class="spk-draw" pathLength="100" d="' + th + '" fill="none" stroke="#ffd77a" stroke-width="1.1" stroke-linecap="round" style="--t:.9s;--d:' + (.9 + ti * .15) + 's;filter:drop-shadow(0 0 5px #ffd77a)"/>' +
-          '<path class="spk-draw" pathLength="100" d="' + th + '" fill="none" stroke="#fff" stroke-width=".35" stroke-linecap="round" style="--t:.9s;--d:' + (1 + ti * .15) + 's"/>';
-      });
-      spkSvg(X, 'spk-svg dk-top', thSvg);
-      for (var i2 = 0; i2 < 18; i2++) spkPart(X, 'spk-rise', {x:rnd(10, 90) + '%', s:rnd(12, 26) + 'px', c:'#ffd77a',
-        t:rnd(2, 3.2) + 's', d:(1 + rnd(0, 1.4)) + 's', dx:rnd(-30, 30) + 'px', r:rnd(-60, 60) + 'deg'}, pick(['結', '✦', '✧']));
-    } else {
-      for (var i3 = 0; i3 < 14; i3++) spkPart(X, 'spk-tw', {x:rnd(0, 100) + '%', y:rnd(0, 100) + '%', d:rnd(.8, 2.4) + 's'});
-    }
-    if (solo || trio) spkPart(X, 'spk-rays', {rc:'rgba(255,230,150,.2)'});
-    [.9, 1.05, 1.25].forEach(function(d){ var wv = spkPart(X, 'spk-wave', {c:'#fff', d:d + 's'}); wv.style.top = '66%'; });
-
-    // 4) 朱の帯：関係の名前を打ち込む（新発見なら朱印も）
-    var rb = el('div', 'dk-rb'); rb.appendChild(el('small', null, tier));
-    var rbt = el('b', null, rname); rbt.style.fontSize = Math.max(22, Math.min(vw * 0.13, 72, (vw - 50) / (rname.length + 1.4))) + 'px';
-    rb.appendChild(rbt); inner.appendChild(rb);
-    if (isNew) inner.appendChild(el('div', 'dk-seal', '新発見'));
-
-    // 5) 台詞：一文字ずつ語る
+    inner.appendChild(pages);
+    var ribbon = el('div', 'dk-rb');
+    ribbon.appendChild(el('small', null, solo ? '一人の筆が、ひとつに結ぶ' : 'ことばと、ことばが響きあう'));
+    ribbon.appendChild(el('b', null, solo ? c.n.replace(/^ひとり技・/, '') : c.n));
+    if (isNew) ribbon.appendChild(el('div', 'dk-seal', '新発見'));
+    inner.appendChild(ribbon);
     var say = el('div', 'dk-say'), head = el('div', 'who');
     head.appendChild(el('span', null, c.t)); head.appendChild(el('em', null, '連携 ' + Math.round(dmg * 1.5)));
-    var txt = el('div', 'txt');
-    Array.from(c.m).forEach(function(ch, i){ var sp = el('span', null, ch); sp.style.animationDelay = (2.05 + i * 0.045) + 's'; txt.appendChild(sp); });
-    say.appendChild(head); say.appendChild(txt);
+    say.appendChild(head); say.appendChild(el('div', 'txt', c.m));
     if (isNew) say.appendChild(el('div', 'reg', '「掛け合いの記録」に書きとめた'));
-    inner.appendChild(say);
-
-    root.appendChild(el('div', 'dk-flash'));
+    inner.appendChild(say); root.appendChild(inner);
     fx.classList.add('dim'); fx.appendChild(root);
-    tone([196, 262], 0.12, 'sawtooth');
+    tone([196, 262], 0.12, 'sine');
     setTimeout(function(){ tone([523, 659, 784], 0.07, 'sine'); }, 350);
-    setTimeout(function(){ tone([98, 131, 196], 0.28, 'sawtooth'); tone([523, 784, 1047, 1319], 0.1); }, 900);
-    setTimeout(function(){ tone([1568, 2093], 0.05, 'sine'); }, 1700);
     return MS;
   }
   function skillFx(dmg, crit){
@@ -2544,6 +2397,7 @@ body[data-screen="home"]>.wrap{background:none;border:0;box-shadow:none;max-widt
     var w = WORK[e[Math.floor(Math.random() * e.length)]];
     scrim();
     var box2 = document.createElement('div'); box2.className = 'skill';
+    literarySurface(box2, w.fx);
     var a = authorLabel('div', 'sauthor', w.b);
     var h2 = document.createElement('div'); h2.className = 'sname'; h2.textContent = '『' + w.t + '』';
     var q2 = document.createElement('div'); q2.className = 'squote'; q2.textContent = w.q;
