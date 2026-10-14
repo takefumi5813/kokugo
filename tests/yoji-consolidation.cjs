@@ -12,11 +12,14 @@ const before = readData(execFileSync('git', ['show', report.baseCommit + ':index
 const original = new Map(before.map(q => [q.id, q]));
 const actual = new Map(DATA.map(q => [q.id, q]));
 const sourceIds = new Set(report.groups.flatMap(g => g.sourceIds));
+// 後の修正で意図して変えた問題（送りがな修正 2026-10-14）は比較から外す
+const laterFix = JSON.parse(fs.readFileSync(path.join(root, 'docs/reading-okurigana-fix.json'), 'utf8'));
+const laterIds = new Set([...laterFix.edited.map(e => e.id), ...laterFix.merged.flatMap(m => [m.from, m.into])]);
 assert.equal(actual.size, DATA.length, 'IDs remain unique');
 assert.equal(report.groups.length, 108);
 assert.equal(DATA.filter(q => q.f === '四字熟語').length, 287);
 for (const q of before) {
-  if (!sourceIds.has(q.id)) assert.deepEqual(actual.get(q.id), q, 'Unrelated question changed: ' + q.id);
+  if (!sourceIds.has(q.id) && !laterIds.has(q.id)) assert.deepEqual(actual.get(q.id), q, 'Unrelated question changed: ' + q.id);
 }
 for (const g of report.groups) {
   const q = actual.get(g.id);
